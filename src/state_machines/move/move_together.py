@@ -57,7 +57,7 @@ class Arrive(smach.State):
         #[todo] error handling (fail)
         return 'done'            
 
-class MoveSM(smach.StateMachine):
+class MoveTogetherSM(smach.StateMachine):
     def __init__(self):
         smach.StateMachine.__init__(self, outcomes=["arrive"],
                                     input_keys=['scene', 'robot_list'],
