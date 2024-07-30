@@ -7,14 +7,14 @@ from std_msgs import String
 class MoveRequest(smach.State):
     def __init__(self):
         smach.StateMachine.__init__(self, outcomes=["done"],
-                                    input_keys=['robot_name', 'goal_pose'],
-                                    output_keys=['robot_name'])
+                                    input_keys=['robot_id', 'goal_pose'],
+                                    output_keys=['robot_id'])
         
         self.move_pub = rospy.Publisher('/scene_manager/move_req', String, queue_size=1)
 
     def execute(self, user_data):
-
         # id pos(x,y) orientation(z,w)
+        user_data.target_id = user_data.id
         orientation = user_data.goal_pose.orientation
         position = user_data.goal_pose.position
         
@@ -24,12 +24,33 @@ class MoveRequest(smach.State):
 
         return 'done'
 
+class OnTheMove(smach.State):
+    def __init__(self):
+        smach_ros.MonitorState.__init__(self, '/scene_manager/move_res', String, self.check_validity,
+                                        input_keys=['robot_id', 'goal_pose'],
+                                        output_keys=['robot_id'])
+        
+    def check_validity(self, user_data, res_msg):
+        result = str(res_msg.data).split()
+
+        if result[0] == user_data.target_id:
+            return False
+        return True
+
+class Arrive(smach.State):
+    def __init__(self):
+        smach.StateMachine.__init__(self, outcomes=['done'],
+                                    input_keys=['robot_id', 'goal_pose'],
+                                    output_keys=['robot_id'])
+    def execute(self, user_data):
+        #error handling (fail)
+        return 'done'            
 
 class MoveSM(smach.StateMachine):
     def __init__(self):
         smach.StateMachine.__init__(self, outcomes=["arrive"],
-                                    input_keys=['robot_name', 'goal_pose'],
-                                    output_keys=['robot_name'])
+                                    input_keys=['robot_id', 'goal_pose'],
+                                    output_keys=['robot_id'])
         
         with self:
             self.add('MOVE_REQUEST', MoveRequest,
@@ -40,6 +61,5 @@ class MoveSM(smach.StateMachine):
                                 'preempted':'ON_THE_MOVE'})
             self.add('ARRIVE', Arrive,
                      transitions={
-                         'done': 'done',
-                         'fail': 'MOVE_REQUEST'
+                         'done': 'done'
                      })
