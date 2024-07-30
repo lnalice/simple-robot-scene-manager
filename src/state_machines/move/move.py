@@ -52,13 +52,13 @@ class MoveSM(smach.StateMachine):
                                     output_keys=['robot_id'])
         
         with self:
-            self.add('MOVE_REQUEST', MoveRequest,
+            self.add('MOVE_REQUEST', MoveRequest(),
                      transitions={'done', 'ON_THE_MOVE'})
-            self.add('ON_THE_MOVE', OnTheMove,
+            self.add('ON_THE_MOVE', OnTheMove(),
                      trasitions={'invalid': 'ARRIVE',
                                 'valid': 'ON_THE_MOVE',
                                 'preempted':'ON_THE_MOVE'})
-            self.add('ARRIVE', Arrive,
+            self.add('ARRIVE', Arrive(),
                      transitions={
                          'done': 'arrive'
                      })

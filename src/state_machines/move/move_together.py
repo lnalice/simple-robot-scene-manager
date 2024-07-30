@@ -1,7 +1,8 @@
 import rospy
 import smach
 import smach_ros
-from std_msgs import String
+import smach_ros.monitor_state
+from std_msgs.msg import String
 
 from collections import deque
 
@@ -13,7 +14,7 @@ class MoveRequest(smach.State):
                                     input_keys=['scene', 'robot_list'],
                                     output_keys=['scene', 'robot_list'])
         
-        self.move_pub = rospy.Publisher('/scene_manager/move_req', String)
+        self.move_pub = rospy.Publisher('/scene_manager/move_req', String, queue_size=5)
 
     def execute(self, user_data):
         move_flow = getMoveFLow(user_data.scene)
@@ -30,7 +31,7 @@ class MoveRequest(smach.State):
             user_data.robot_list.append(task["robot_id"])
         return 'done'
 
-class OnTheMove(smach.State):
+class OnTheMove(smach_ros.MonitorState):
     def __init__(self):
         smach_ros.MonitorState.__init__(self, '/scene_manager/move_res', String, self.check_leftover,
                                         input_keys=['scene', 'robot_list'],
@@ -64,13 +65,13 @@ class MoveTogetherSM(smach.StateMachine):
                                     output_keys=['scene', 'robot_list'])
         
         with self:
-            self.add('MOVE_REQUEST', MoveRequest,
-                     transitions={'done', 'ON_THE_MOVE'})
-            self.add('ON_THE_MOVE', OnTheMove,
-                     trasitions={'invalid': 'ARRIVE',
+            self.add('MOVE_REQUEST', MoveRequest(),
+                     transitions={'done': 'ON_THE_MOVE'})
+            self.add('ON_THE_MOVE', OnTheMove(),
+                     transitions={'invalid': 'ARRIVE',
                                 'valid': 'ON_THE_MOVE',
                                 'preempted':'ON_THE_MOVE'})
-            self.add('ARRIVE', Arrive,
+            self.add('ARRIVE', Arrive(),
                      transitions={
                          'done': 'arrive'
                      })

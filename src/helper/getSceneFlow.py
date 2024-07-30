@@ -3,8 +3,7 @@ import json
 from typing import Tuple
 
 
-json_loc = '../../data/scene_param.json'
-
+json_loc = '/home/domain/robot_ws/src/scene_manager/src/data/scene_param.json'
 
 def getSceneFlow(scene:str) -> Tuple[deque, deque]:
     
@@ -22,8 +21,8 @@ def getSceneFlow(scene:str) -> Tuple[deque, deque]:
                 module = robot_goal["module"]
 
                 move_flow.append({"robot_id": id, 
-                                  "pos_x": position.x, "pos_y": position.y,
-                                  "ort_z": orientation.z, "ort_w":orientation.w})
+                                  "pos_x": position["x"], "pos_y": position["y"],
+                                  "ort_z": orientation["z"], "ort_w": orientation["w"]})
                 ctrl_flow.append({"robot_id": id, "module": module})
 
     return move_flow, ctrl_flow
@@ -42,8 +41,8 @@ def getMoveFLow(scene:str) -> deque:
                 orientation = robot_goal["orientation"]
 
                 move_flow.append({"robot_id": id, 
-                                  "pos_x": position.x, "pos_y": position.y,
-                                  "ort_z": orientation.z, "ort_w":orientation.w})
+                                  "pos_x": position["x"], "pos_y": position["y"],
+                                  "ort_z": orientation["z"], "ort_w": orientation["w"]})
 
     return move_flow
 
