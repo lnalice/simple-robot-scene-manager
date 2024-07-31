@@ -6,7 +6,8 @@ from std_msgs.msg import String
 
 from collections import deque
 
-from helper.getSceneFlow import getMoveFLow
+# from helper.getSceneFlow import getMoveFLow
+from helper.getSceneFlowVel import getMoveFLow # cmd_vel
 
 class MoveRequest(smach.State):
     def __init__(self):
@@ -14,7 +15,7 @@ class MoveRequest(smach.State):
                                     input_keys=['scene', 'robot_list'],
                                     output_keys=['scene', 'robot_list'])
         
-        self.move_pub = rospy.Publisher('/scene_manager/move_req', String, queue_size=5)
+        self.move_pub = rospy.Publisher('/scene_manager/move_req', String, queue_size=1)
 
     def execute(self, user_data):
         move_flow = getMoveFLow(user_data.scene)
@@ -22,13 +23,19 @@ class MoveRequest(smach.State):
         user_data.robot_list = []
 
         while move_flow:
-            # task: {"robot_id": id, "pos_x": position.x, "pos_y": position.y, "ort_z": orientation.z, "ort_w":orientation.w}
-            task = move_flow.popleft() 
-            goal_data = "%s %f %f %f %f" %(task["robot_id"], task["pos_x"], task["pos_y"], task["ort_z"], task["ort_w"])
-
+            rospy.sleep(1)
+            
+            goal_data = move_flow.popleft() 
+            
             self.move_pub.publish(goal_data)
 
-            user_data.robot_list.append(task["robot_id"])
+            rospy.loginfo("[MoveTogether] move_req is published now.")
+            rospy.loginfo("[MoveTogether] data published now: %s", goal_data)
+
+            user_data.robot_list.append(goal_data.split()[0])
+        
+        rospy.loginfo("[MoveTogether] robot_list is updated now (%s)", str(user_data.robot_list))
+
         return 'done'
 
 class OnTheMove(smach_ros.MonitorState):

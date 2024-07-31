@@ -1,10 +1,11 @@
+#!/usr/bin/env python3
+
 import rospy
 import smach
 import smach_ros
 
 import argparse
 
-from helper.getSceneFlow import getSceneFlow
 from state_machines.move.move_together import MoveTogetherSM
                 
 class ScenePlanner:
@@ -14,8 +15,6 @@ class ScenePlanner:
 
         # robot_id goal_pose.position(x,y) goal_pose.orientation(z,w)
         self.scene = "scene" + "_" + param.scene[0] #[todo] have to deal with scene list
-
-        self.moveFlow, self.ctrlFLow = getSceneFlow(self.scene)
 
         self.sm = smach.StateMachine(outcomes=["end"])
         self.sm.userdata.scene = self.scene
@@ -40,5 +39,7 @@ args = parser.parse_args()
 
 if __name__ == "__main__":
     simple_traveler = ScenePlanner(param=args)
+    outcome = simple_traveler.sm.execute()
     # simple_traveler.move_action()
     rospy.spin()
+    
