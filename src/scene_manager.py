@@ -7,6 +7,7 @@ import smach_ros
 import argparse
 
 from state_machines.move.move_together import MoveTogetherSM
+from state_machines.move.spin_together import SpinTogetherSM
                 
 class ScenePlanner:
     def __init__(self, param):
@@ -23,12 +24,15 @@ class ScenePlanner:
         with self.sm:
             smach.StateMachine.add('MOVE', MoveTogetherSM(),
                                    transitions={ 
+                                       'arrive': 'SPIN'})
+                                    #    'arrive': 'CTRL_MODULE'})
+            # smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(),
+            #                        transision={'done': 'COME_BACK'})
+            smach.StateMachine.add("SPIN", SpinTogetherSM(),
+                                   transitions={'arrive': 'COME_BACK'})
+            smach.StateMachine.add('COME_BACK', MoveTogetherSM(),
+                                   transitions={ 
                                        'arrive': 'end'})
-                                    #    'end': 'CTRL_MODULE'})
-            # smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(self.ctrl_task_id),
-            #                        transision={'done': 'CTRL_MODULE',
-            #                                    'end':'COME_BACK'})
-            # smach.StateMachine.add("COME_BACK",)
 
 
 parser = argparse.ArgumentParser(description="robot specification",
