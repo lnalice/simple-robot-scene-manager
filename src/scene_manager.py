@@ -9,15 +9,16 @@ import argparse
 from state_machines.move.move_together import MoveTogetherSM
 from state_machines.move.spin_together import SpinTogetherSM
                 
-class ScenePlanner:
+class SceneManager:
     def __init__(self, param):
 
-        rospy.init_node("scene_planner_node")
+        rospy.init_node("scene_manager_node")
 
         # robot_id goal_pose.position(x,y) goal_pose.orientation(z,w)
         self.scene = "scene" + "_" + param.scene[0] #[todo] have to deal with scene list
 
         self.sm = smach.StateMachine(outcomes=["end"])
+        self.sm.set_initial_state(['MOVE'])
         self.sm.userdata.scene = self.scene
         self.sm.userdata.robot_list = []
 
@@ -42,8 +43,15 @@ parser.add_argument(
 args = parser.parse_args()
 
 if __name__ == "__main__":
-    simple_traveler = ScenePlanner(param=args)
+    simple_traveler = SceneManager(param=args)
+
+    sis = smach_ros.IntrospectionServer('scene_manager_node', simple_traveler.sm, '/scene_manager')
+    sis. start()
+
     outcome = simple_traveler.sm.execute()
     # simple_traveler.move_action()
+    rospy.loginfo("[Scene Manager] final state is %s. done.", outcome)
+    
     rospy.spin()
+    sis.stop()
     
