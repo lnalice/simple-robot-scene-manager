@@ -6,6 +6,7 @@ from std_msgs.msg import String
 
 from collections import deque
 
+# from helper.getSceneFlow import getMoveFLow # nav
 from helper.getSceneFlowVel import getMoveFLow # cmd_vel
 
 class SpinRequest(smach.State):
