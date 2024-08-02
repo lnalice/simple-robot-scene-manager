@@ -20,10 +20,11 @@ def getSceneFlow(scene:str) -> Tuple[deque, deque]:
                 orientation = robot_goal["orientation"]
                 module = robot_goal["module"]
 
-                move_flow.append({"robot_id": id, 
-                                  "pos_x": position["x"], "pos_y": position["y"],
-                                  "ort_z": orientation["z"], "ort_w": orientation["w"]})
-                ctrl_flow.append({"robot_id": id, "module": module})
+                move_task = "%s %f %f %f %f" %(id, position["x"], position["y"], orientation["z"], orientation["w"])
+                ctrl_task = "%s %f" %(id, module)
+
+                move_flow.append(move_task)
+                ctrl_flow.append(ctrl_task)
 
     return move_flow, ctrl_flow
 
@@ -40,9 +41,9 @@ def getMoveFLow(scene:str) -> deque:
                 position = robot_goal["position"]
                 orientation = robot_goal["orientation"]
 
-                move_flow.append({"robot_id": id, 
-                                  "pos_x": position["x"], "pos_y": position["y"],
-                                  "ort_z": orientation["z"], "ort_w": orientation["w"]})
+                task = "%s %f %f %f %f" %(id, position["x"], position["y"], orientation["z"], orientation["w"])
+
+                move_flow.append(task)
 
     return move_flow
 
@@ -57,6 +58,9 @@ def getCtrlFlow(scene:str) -> deque:
             for robot_goal in json_data[scene]:
                 id = robot_goal["robot_id"]
                 module = robot_goal["module"]
-                ctrl_flow.append({"robot_id": id, "module": module})
+
+                task = "%s %f" %(id, module)
+
+                ctrl_flow.append(task)
 
     return ctrl_flow

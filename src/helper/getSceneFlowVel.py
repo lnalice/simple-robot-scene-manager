@@ -18,10 +18,6 @@ def getMoveFLow(scene:str) -> deque:
                 lin_vel = robot_goal["lin_vel"]
                 ang_vel = robot_goal["ang_vel"]
 
-                # move_flow.append({"robot_id": id, 
-                #                   "lin_x": lin_vel["x"], "lin_y": lin_vel["y"], "lin_z": lin_vel["z"],
-                #                   "ang_x": ang_vel["x"], "ang_y": ang_vel["y"], "ang_z": ang_vel["z"]})
-
                 task = "%s %d %f %f %f %f %f %f" %(id, sec, lin_vel["x"], lin_vel["y"], lin_vel["z"], 
                                                 ang_vel["x"], ang_vel["y"], ang_vel["z"])
                 move_flow.append(task)
@@ -39,6 +35,9 @@ def getCtrlFlow(scene:str) -> deque:
             for robot_goal in json_data[scene]:
                 id = robot_goal["robot_id"]
                 module = robot_goal["module"]
-                ctrl_flow.append({"robot_id": id, "module": module})
+                
+                task = "%s %f" %(id, module)
+
+                ctrl_flow.append(task)
 
     return ctrl_flow
