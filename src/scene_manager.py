@@ -8,6 +8,7 @@ import argparse
 
 from state_machines.move.move_together import MoveTogetherSM
 from state_machines.move.spin_together import SpinTogetherSM
+from state_machines.control.control_module import CtrlModuleSM
                 
 class SceneManager:
     def __init__(self, param):
@@ -25,10 +26,9 @@ class SceneManager:
         with self.sm:
             smach.StateMachine.add('MOVE', MoveTogetherSM(),
                                    transitions={ 
-                                       'arrive': 'SPIN'})
-                                    #    'arrive': 'CTRL_MODULE'})
-            # smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(),
-            #                        transision={'done': 'COME_BACK'})
+                                       'arrive': 'CTRL_MODULE'})
+            smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(),
+                                   transision={'done': 'COME_BACK'})
             smach.StateMachine.add("SPIN", SpinTogetherSM(),
                                    transitions={'arrive': 'COME_BACK'})
             smach.StateMachine.add('COME_BACK', MoveTogetherSM(),

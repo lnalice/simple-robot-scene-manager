@@ -18,12 +18,13 @@ class MoveRequest(smach.State):
         self.move_pub = rospy.Publisher('/scene_manager/move_req', String, queue_size=1)
 
     def execute(self, user_data):
+        rospy.sleep(0.1)
+        
         move_flow = getMoveFLow(user_data.scene)
 
         user_data.robot_list = []
 
         while move_flow:
-            rospy.sleep(1)
             
             goal_data = move_flow.popleft() 
             
@@ -50,11 +51,12 @@ class OnTheMove(smach_ros.MonitorState):
         if result[0] in user_data.robot_list:
             user_data.robot_list.remove(result[0])
             rospy.loginfo(f"robot %s arrived", result[0])
+            rospy.loginfo("[MoveTogether] robot_list is updated now (%s)", str(user_data.robot_list))
         
         if len(user_data.robot_list) > 0:
-            return False
+            return True
         
-        return True
+        return False
 
 class Arrive(smach.State):
     def __init__(self):
