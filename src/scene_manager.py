@@ -7,7 +7,7 @@ import smach_ros
 import argparse
 
 from state_machines.move.move_together import MoveTogetherSM
-from state_machines.move.spin_together import SpinTogetherSM
+from state_machines.spin.spin_together import SpinTogetherSM
 from state_machines.control.control_module import CtrlModuleSM
                 
 class SceneManager:
@@ -24,16 +24,19 @@ class SceneManager:
         self.sm.userdata.robot_list = []
 
         with self.sm:
-            smach.StateMachine.add('MOVE', MoveTogetherSM(),
-                                   transitions={ 
-                                       'arrive': 'CTRL_MODULE'})
+            smach.StateMachine.add('MOVE', MoveTogetherSM(direction="forward"),
+                                   transitions={ 'arrive': 'CTRL_MODULE'})
             smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(),
-                                   transitions={'complete': 'SPIN'})
+                                   transitions={'complete': 'COME_BACK_BACKWARD'})
+            """
+            ** If you want robot only to go forward...
             smach.StateMachine.add("SPIN", SpinTogetherSM(),
-                                   transitions={'arrive': 'COME_BACK'})
-            smach.StateMachine.add('COME_BACK', MoveTogetherSM(),
-                                   transitions={ 
-                                       'arrive': 'end'})
+                                   transitions={'arrive': 'COME_BACK_FORWARD'})
+            smach.StateMachine.add('COME_BACK_FORWARD', MoveTogetherSM(direction="forward"),
+                                   transitions={'arrive': 'end'})
+            """
+            smach.StateMachine.add('COME_BACK_BACKWARD', MoveTogetherSM(direction="backward"),
+                                   transitions={'arrive': 'end'})
 
 
 parser = argparse.ArgumentParser(description="robot specification",

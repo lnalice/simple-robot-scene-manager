@@ -6,14 +6,14 @@ from std_msgs.msg import String
 
 from collections import deque
 
-# from helper.getSceneFlow import getMoveFLow # nav
-from helper.getSceneFlowVel import getMoveFLow # cmd_vel
+# from dao.getSceneFlow import getMoveFLow # nav
+from dao.getSceneFlowVel import getMoveFLow # cmd_vel
 
 DISPLAY_TIME = 10
 
 class SpinRequest(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=["done"],
+        smach.State.__init__(self, outcomes=["done", "none"],
                                     input_keys=['scene', 'robot_list'],
                                     output_keys=['scene', 'robot_list'])
         
@@ -43,6 +43,9 @@ class SpinRequest(smach.State):
             user_data.robot_list.append(robot_id)
 
         rospy.loginfo("[SpinTogether] robot_list is updated now (%s)", str(user_data.robot_list))
+
+        if len(user_data.robot_list) == 0:
+            return 'none'
 
         return 'done'
 
@@ -78,10 +81,11 @@ class SpinTogetherSM(smach.StateMachine):
         smach.StateMachine.__init__(self, outcomes=["arrive"],
                                     input_keys=['scene', 'robot_list'],
                                     output_keys=['scene', 'robot_list'])
-        
+
         with self:
             self.add('SPIN_REQUEST', SpinRequest(),
-                     transitions={'done': 'ON_THE_MOVE'})
+                     transitions={'done': 'ON_THE_MOVE',
+                                  'none': 'arrive'})
             self.add('ON_THE_MOVE', Spin(),
                      transitions={'invalid': 'ARRIVE',
                                 'valid': 'ON_THE_MOVE',
