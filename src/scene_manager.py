@@ -28,7 +28,7 @@ class SceneManager:
                                    transitions={ 
                                        'arrive': 'CTRL_MODULE'})
             smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(),
-                                   transision={'done': 'COME_BACK'})
+                                   transitions={'complete': 'SPIN'})
             smach.StateMachine.add("SPIN", SpinTogetherSM(),
                                    transitions={'arrive': 'COME_BACK'})
             smach.StateMachine.add('COME_BACK', MoveTogetherSM(),

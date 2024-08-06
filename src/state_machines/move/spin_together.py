@@ -9,6 +9,8 @@ from collections import deque
 # from helper.getSceneFlow import getMoveFLow # nav
 from helper.getSceneFlowVel import getMoveFLow # cmd_vel
 
+DISPLAY_TIME = 10
+
 class SpinRequest(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes=["done"],
@@ -18,13 +20,15 @@ class SpinRequest(smach.State):
         self.move_pub = rospy.Publisher('/scene_manager/move_req', String, queue_size=1)
 
     def execute(self, user_data):
-        rospy.sleep(0.1)
 
         move_flow = getMoveFLow("turn_around")
         scene_flow = getMoveFLow(user_data.scene)
         goal_data = move_flow.popleft()
 
         user_data.robot_list = []
+
+        rospy.sleep(DISPLAY_TIME)
+        rospy.loginfo("[SpinTogether] I'm waiting for the exhibition time to end.(time: %s)\n", DISPLAY_TIME)
 
         while scene_flow:
             

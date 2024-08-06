@@ -9,7 +9,7 @@ from collections import deque
 # from helper.getSceneFlow import getCtrlFlow #nav
 from helper.getSceneFlowVel import getCtrlFlow # cmd_vel
 
-class CtrlRequest(smach.State):
+class ControlRequest(smach.State):
     def __init__(self):
         smach.StateMachine.__init__(self, outcomes=["done"],
                                     input_keys=['scene', 'robot_list'],

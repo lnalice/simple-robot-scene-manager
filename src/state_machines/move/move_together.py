@@ -18,7 +18,6 @@ class MoveRequest(smach.State):
         self.move_pub = rospy.Publisher('/scene_manager/move_req', String, queue_size=1)
 
     def execute(self, user_data):
-        rospy.sleep(0.1)
         
         move_flow = getMoveFLow(user_data.scene)
 
