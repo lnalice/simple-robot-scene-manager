@@ -28,16 +28,19 @@ class SceneManager:
                                    transitions={ 'arrive': 'CTRL_MODULE'})
             smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(),
                                    transitions={'complete': 'COME_BACK_BACKWARD'})
-            """
-            ** If you want robot only to go forward...
-            smach.StateMachine.add("SPIN", SpinTogetherSM(),
-                                   transitions={'arrive': 'COME_BACK_FORWARD'})
-            smach.StateMachine.add('COME_BACK_FORWARD', MoveTogetherSM(direction="forward"),
-                                   transitions={'arrive': 'end'})
-            """
             smach.StateMachine.add('COME_BACK_BACKWARD', MoveTogetherSM(direction="backward"),
                                    transitions={'arrive': 'end'})
-
+            """
+            ** If you want robot only to go forward
+            """
+            # smach.StateMachine.add('MOVE', MoveTogetherSM(direction="forward"),
+            #                        transitions={ 'arrive': 'CTRL_MODULE'})
+            # smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(),
+            #                        transitions={'complete': 'SPIN'})
+            # smach.StateMachine.add("SPIN", SpinTogetherSM(),
+            #                        transitions={'arrive': 'COME_BACK_FORWARD'})
+            # smach.StateMachine.add('COME_BACK_FORWARD', MoveTogetherSM(direction="forward"),
+            #                        transitions={'arrive': 'end'})
 
 parser = argparse.ArgumentParser(description="robot specification",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)

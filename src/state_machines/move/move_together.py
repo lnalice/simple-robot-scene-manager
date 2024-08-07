@@ -34,6 +34,7 @@ class MoveRequest(smach.State):
         user_data.robot_list = []
 
         while move_flow:
+            rospy.sleep(0.1)
             
             goal_data = move_flow.popleft() 
             

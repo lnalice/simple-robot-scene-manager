@@ -4,7 +4,7 @@
             "robot_id": "tb3_0",
             "seconds" : 15,
             "lin_vel" : {"x":  0.06, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.02},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.0},
             "module": 0.0,
             "move_delay": 0,
             "ctrl_delay": 0
@@ -48,8 +48,8 @@
         {
             "robot_id": "tb3_0",
             "seconds" : 15,
-            "lin_vel" : {"x":  0.04, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.0},
+            "lin_vel" : {"x":  0.045, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.04},
             "module": 0.0,
             "move_delay": 0,
             "ctrl_delay": 0
@@ -59,7 +59,7 @@
             "robot_id": "tb3_1",
             "seconds" : 15,
             "lin_vel" : {"x":  0.04, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.03},
             "module": 0.0,
             "move_delay": 0,
             "ctrl_delay": 0
@@ -68,7 +68,7 @@
             "robot_id": "tb3_2",
             "seconds" : 15,
             "lin_vel" : {"x":  0.04, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.2},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.03},
             "module": 0.0,
             "move_delay": 5,
             "ctrl_delay": 0
@@ -76,8 +76,8 @@
         {
             "robot_id": "tb3_3",
             "seconds" : 15,
-            "lin_vel" : {"x":  0.04, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.2},
+            "lin_vel" : {"x":  0.045, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.04},
             "module": 0.0,
             "move_delay": 5,
             "ctrl_delay": 0
@@ -117,18 +117,27 @@
         {
             "robot_id": "tb3_0",
             "seconds" : 15,
-            "lin_vel" : {"x":  0.06, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.1},
+            "lin_vel" : {"x":  0.07, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.02},
             "module": 0.0,
             "move_delay": 0,
             "ctrl_delay": 0
             
         },
         {
+            "robot_id": "tb3_1",
+            "seconds" : 15,
+            "lin_vel" : {"x":  0.05, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.01},
+            "module": 2.0,
+            "move_delay": 0,
+            "ctrl_delay": 0
+        },
+        {
             "robot_id": "tb3_2",
             "seconds" : 15,
-            "lin_vel" : {"x":  0.04, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.0},
+            "lin_vel" : {"x":  0.03, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.025},
             "module": 0.0,
             "move_delay": 0,
             "ctrl_delay": 0
@@ -136,17 +145,8 @@
         {
             "robot_id": "tb3_3",
             "seconds" : 15,
-            "lin_vel" : {"x":  0.05, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.2},
-            "module": 2.0,
-            "move_delay": 0,
-            "ctrl_delay": 0
-        },
-        {
-            "robot_id": "tb3_4",
-            "seconds" : 15,
-            "lin_vel" : {"x":  0.04, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.2},
+            "lin_vel" : {"x":  0.08, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.035},
             "module": 0.0,
             "move_delay": 0,
             "ctrl_delay": 0
@@ -156,39 +156,30 @@
         {
             "robot_id": "tb3_0",
             "seconds" : 15,
-            "lin_vel" : {"x":  0.04, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.0},
-            "module": 0.0,
+            "lin_vel" : {"x":  0.055, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.01},
+            "module": 2.0,
+            "move_delay": 0,
+            "ctrl_delay": 20
+            
+        },
+        {
+            "robot_id": "tb3_1",
+            "seconds" : 15,
+            "lin_vel" : {"x":  0.05, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.01},
+            "module": 2.0,
             "move_delay": 0,
             "ctrl_delay": 0
-            
         },
         {
             "robot_id": "tb3_2",
             "seconds" : 15,
-            "lin_vel" : {"x":  0.04, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.0},
+            "lin_vel" : {"x":  0.025, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.03},
             "module": 0.0,
             "move_delay": 0,
             "ctrl_delay": 0
-        },
-        {
-            "robot_id": "tb3_3",
-            "seconds" : 15,
-            "lin_vel" : {"x":  0.04, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.2},
-            "module": 2.0,
-            "move_delay": 0,
-            "ctrl_delay": 0
-        },
-        {
-            "robot_id": "tb3_4",
-            "seconds" : 15,
-            "lin_vel" : {"x":  0.04, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.2},
-            "module": 2.0,
-            "move_delay": 0,
-            "ctrl_delay": 5
         }
     ],
     "turn_around": [
