@@ -2,23 +2,22 @@
     "scene_0": [
         {
             "robot_id": "tb3_2",
-            "seconds" : 15,
-            "lin_vel" : {"x":  0.1, "y": 0.0, "z": 0.0},
-            "ang_vel" : {"x":  0.0, "y": 0.0, "z": -0.024},
-            "module": 0.0,
+            "seconds" : 15, 
+            "lin_vel" : {"x":  0.06, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.0},
+            "module": -0.03,
             "move_delay": 0,
             "ctrl_delay": 0
-            
         }
     ],
     
     "scene_1": [
         {
             "robot_id": "tb3_0",
-            "seconds" : 15,
+            "seconds" : 15, 
             "lin_vel" : {"x":  0.06, "y": 0.0, "z": 0.0},
             "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.0},
-            "module": 0.0,
+            "module": 0,
             "move_delay": 0,
             "ctrl_delay": 0
         }
@@ -36,6 +35,27 @@
         },
         {
             "robot_id": "tb3_1",
+            "seconds" : 15,
+            "lin_vel" : {"x":  0.06, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.0},
+            "module": 2.0,
+            "move_delay": 0,
+            "ctrl_delay": 5
+        }
+    ],
+    "scene_2-2": [
+        {
+            "robot_id": "tb3_2",
+            "seconds" : 15,
+            "lin_vel" : {"x":  0.06, "y": 0.0, "z": 0.0},
+            "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.0},
+            "module": 0.0,
+            "move_delay": 0,
+            "ctrl_delay": 0
+            
+        },
+        {
+            "robot_id": "tb3_3",
             "seconds" : 15,
             "lin_vel" : {"x":  0.06, "y": 0.0, "z": 0.0},
             "ang_vel" : {"x":  0.0, "y": 0.0, "z": 0.0},
