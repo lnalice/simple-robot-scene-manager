@@ -5,6 +5,8 @@ import smach_ros
 import smach_ros.monitor_state
 from std_msgs.msg import String
 
+from dao.velocity.verifySceneFlow import verifiedRobotList
+
 """
 @request    SCENE  {scene_id} {robot_id} {robot_id
 @request    MOVE   {scene_id} {robot_id} {robot_id}...
@@ -13,7 +15,7 @@ from std_msgs.msg import String
 """
 class RequestMonitor(smach_ros.MonitorState):
     def __init__(self):
-        smach_ros.MonitorState.__init__(self, '/react/commander', String, self.check_command,
+        smach_ros.MonitorState.__init__(self, 'react/commander', String, self.check_command,
                                         input_keys=['command'],
                                         output_keys=['command'])
         
@@ -35,11 +37,12 @@ class Request2State(smach.State):
     def execute(self, user_data):
         full_cmd_list = str(user_data.command).split()
 
-        user_data.command = full_cmd_list[0]
-        user_data.scene = full_cmd_list[1]
-        user_data.robot_list = full_cmd_list[2:]
+        user_data.command = full_cmd_list[0] # MOVE or HOME or MODULE or SCENE
+        user_data.scene = "scene_" + full_cmd_list[1] # ex) scene_1
+        user_data.robot_list = verifiedRobotList(user_data.scene, full_cmd_list[2:]) # ex) ['tb3_0', 'tb3_1', 'tb3_2']
 
-        rospy.loginfo(f"[RequestInterpreter] I saved state %s in SceneManager", user_data.command)
+        rospy.loginfo(f"[RequestInterpreter] SceneManager will track these robots: %s.", (user_data.robot_list))
+        rospy.loginfo(f"[RequestInterpreter] I saved state \'%s\' in SceneManager", user_data.command)
         
         if user_data.command == "MOVE":
             return "move"
@@ -53,8 +56,8 @@ class Request2State(smach.State):
 class RequestInterpreterSM(smach.StateMachine):
     def __init__(self):
         smach.StateMachine.__init__(self, outcomes=['scene', 'move', 'module', 'home'],
-                                    input_keys=['command'],
-                                    output_keys=['command'])
+                                    input_keys=['scene', 'robot_list', 'command'],
+                                    output_keys=['scene', 'robot_list', 'command'])
         
         with self:
             self.add('REQUEST', RequestMonitor(),

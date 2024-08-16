@@ -6,8 +6,8 @@ from std_msgs.msg import String
 
 from collections import deque
 
-# from dao.getSceneFlow import getMoveFLow #nav
-from dao.getSceneFlowVel import getMoveFLow, getOppositeMoveFLow # cmd_vel
+# from dao.location.getSceneFlow import getMoveFLow #nav
+from dao.velocity.getFlowByRobotList import getMoveFLow, getOppositeMoveFLow # cmd_vel
 
 DISPLAY_TIME = 10.0
 
@@ -27,9 +27,9 @@ class MoveRequest(smach.State):
         
         if self.direction == "backward":
             rospy.sleep(DISPLAY_TIME)
-            move_flow = getOppositeMoveFLow(user_data.scene)
+            move_flow = getOppositeMoveFLow(user_data.scene, user_data.robot_list)
         else :
-            move_flow = getMoveFLow(user_data.scene)
+            move_flow = getMoveFLow(user_data.scene, user_data.robot_list)
 
         user_data.robot_list = []
 

@@ -6,8 +6,8 @@ from std_msgs.msg import String
 
 from collections import deque
 
-# from dao.getSceneFlow import getCtrlFlow #nav
-from dao.getSceneFlowVel import getCtrlFlow # cmd_vel
+# from dao.location.getSceneFlow import getCtrlFlow #nav
+from dao.velocity.getFlowByRobotList import getCtrlFlow # cmd_vel
 
 class ControlRequest(smach.State):
     def __init__(self):
@@ -19,7 +19,7 @@ class ControlRequest(smach.State):
     def execute(self, user_data):
         rospy.sleep(0.1)
 
-        ctrl_flow = getCtrlFlow(user_data.scene)
+        ctrl_flow = getCtrlFlow(user_data.scene, user_data.robot_list)
         
         user_data.robot_list =[]
 
