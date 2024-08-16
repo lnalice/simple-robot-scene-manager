@@ -47,9 +47,10 @@ def getCtrlFlow(scene:str, robot_list:list) -> deque:
                 if float(module) == 0:
                      continue
                 
+                sec = robot_goal["module_seconds"]
                 delay_sec = robot_goal["ctrl_delay"]
                 
-                task = "%s %f %d" %(id, module, delay_sec)
+                task = "%s %f %d" %(id, sec,module, delay_sec)
 
                 ctrl_flow.append(task)
 
