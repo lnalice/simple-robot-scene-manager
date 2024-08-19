@@ -38,16 +38,16 @@ class SceneManager:
             smach.StateMachine.add('SCENE_CTRL_MODULE', CtrlModuleSM(),
                                    transitions={'complete': 'SCENE_COME_BACK_BACKWARD'})
             smach.StateMachine.add('SCENE_COME_BACK_BACKWARD', MoveTogetherSM(direction="backward"),
-                                   transitions={'arrive': 'end'})
+                                   transitions={'arrive': 'REQUEST'})
             """
             [ custom command ]
             """
             smach.StateMachine.add('MOVE', MoveTogetherSM(direction="forward"),
-                                   transitions={'arrive': 'end'})
+                                   transitions={'arrive': 'REQUEST'})
             smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(),
-                                   transitions={'complete': 'end'})
+                                   transitions={'complete': 'REQUEST'})
             smach.StateMachine.add('COME_BACK_BACKWARD', MoveTogetherSM(direction="backward"),
-                                   transitions={'arrive': 'end'})
+                                   transitions={'arrive': 'REQUEST'})
             
             """
             ** If you want robot only to go forward
