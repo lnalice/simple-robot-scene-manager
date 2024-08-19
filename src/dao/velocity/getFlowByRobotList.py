@@ -69,6 +69,8 @@ this SELECT function is for 'go home'
 - return opposit direction from scene
 - return non-delay seconds
 """
+COMEBACK_SPEED = 0.04
+
 def getOppositeMoveFLow(scene:str, robot_list:list) -> deque:
     
     move_flow = deque()
@@ -83,12 +85,13 @@ def getOppositeMoveFLow(scene:str, robot_list:list) -> deque:
                 if id not in robot_list:
                      continue
                 
-                sec = robot_goal["seconds"]
+                org_lin_vel = float(lin_vel["z"])
+                _sec = robot_goal["seconds"] * (org_lin_vel / COMEBACK_SPEED)
                 lin_vel = robot_goal["lin_vel"]
                 ang_vel = robot_goal["ang_vel"]
-                delay_sec = robot_goal["move_delay"]
+                # delay_sec = robot_goal["move_delay"]
 
-                task = "%s %d %f %f %f %f %f %f %d" %(id, sec, -float(lin_vel["x"]), -float(lin_vel["y"]), -float(lin_vel["z"]), 
+                task = "%s %d %f %f %f %f %f %f %d" %(id, _sec, -float(lin_vel["x"]), -float(lin_vel["y"]), -float(COMEBACK_SPEED), 
                                                 float(ang_vel["x"]), float(ang_vel["y"]), float(ang_vel["z"]), 0)
                 move_flow.append(task)
 
