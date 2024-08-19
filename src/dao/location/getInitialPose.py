@@ -1,8 +1,10 @@
+import os
 from collections import deque
 import json
 
-
-json_loc = '/home/domain/robot_ws/src/robot_planner/src/data/initial_pose.json'
+json_rel_loc = 'data/scene_param.json'
+base_path = os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))  # base path: scene_manager/src/
+json_loc = os.path.join(base_path, json_rel_loc) 
 
 def getInitialPose(robot_id:str) -> tuple:
     # read json file

@@ -1,7 +1,10 @@
+import os
 from collections import deque
 import json
 
-json_vel_loc = '/home/domain/robot_ws/src/scene_manager/src/data/scene_param_vel.json'
+json_vel_rel_loc = 'data/scene_param_vel.json'
+base_path = os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))  # base path: scene_manager/src/
+json_vel_loc = os.path.join(base_path, json_vel_rel_loc) 
 
 def getMoveFLow(scene:str) -> deque:
     
