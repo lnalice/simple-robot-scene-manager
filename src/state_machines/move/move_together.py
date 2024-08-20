@@ -24,10 +24,15 @@ class MoveRequest(smach.State):
 
     def execute(self, user_data):
         move_flow = deque()
+
+        display_time = DISPLAY_TIME if user_data.command == "SCENE" else 0
         
         if self.direction == "backward":
-            rospy.sleep(DISPLAY_TIME)
+            rospy.loginfo("[MoveTogether] The waiting time has been set. I'll wait \"%s\" seconds...", display_time)
+            rospy.sleep(display_time)
+            
             move_flow = getOppositeMoveFLow(user_data.scene, user_data.robot_list)
+
         else :
             move_flow = getMoveFLow(user_data.scene, user_data.robot_list)
 
