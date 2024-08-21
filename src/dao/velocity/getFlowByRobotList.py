@@ -1,10 +1,13 @@
 import os
 from collections import deque
 import json
+import rospy
 
 json_vel_rel_loc = 'data/scene_param_vel.json'
 base_path = os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))  # base path: scene_manager/src/
 json_vel_loc = os.path.join(base_path, json_vel_rel_loc) 
+
+COMEBACK_SPEED = 0.12
 
 def getMoveFLow(scene:str, robot_list:list) -> deque:
     
@@ -69,7 +72,6 @@ this SELECT function is for 'go home'
 - return opposit direction from scene
 - return non-delay seconds
 """
-COMEBACK_SPEED = 0.04
 
 def getOppositeMoveFLow(scene:str, robot_list:list) -> deque:
     
@@ -87,11 +89,11 @@ def getOppositeMoveFLow(scene:str, robot_list:list) -> deque:
                 
                 lin_vel = robot_goal["lin_vel"]
                 ang_vel = robot_goal["ang_vel"]
-                org_lin_vel = float(lin_vel["z"])
+                org_lin_vel = float(lin_vel["x"])
                 _sec = robot_goal["seconds"] * (org_lin_vel / COMEBACK_SPEED)
                 # delay_sec = robot_goal["move_delay"]
 
-                task = "%s %d %f %f %f %f %f %f %d" %(id, _sec, -float(lin_vel["x"]), -float(lin_vel["y"]), -float(COMEBACK_SPEED), 
+                task = "%s %d %f %f %f %f %f %f %d" %(id, _sec, -float(COMEBACK_SPEED), -float(lin_vel["y"]), -float(lin_vel["z"]), 
                                                 float(ang_vel["x"]), float(ang_vel["y"]), float(ang_vel["z"]), 0)
                 move_flow.append(task)
 
