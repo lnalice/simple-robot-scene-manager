@@ -14,7 +14,7 @@ DISPLAY_TIME = 10.0
 class MoveRequest(smach.State):
     def __init__(self, direction:String):
         smach.State.__init__(self, outcomes=["done", "none"],
-                                    input_keys=['scene', 'robot_list'],
+                                    input_keys=['command', 'scene', 'robot_list'],
                                     output_keys=['scene', 'robot_list'])
         
         self.direction = direction # goal(move by scene), home(move opposite direction from scene)
@@ -88,7 +88,7 @@ class Arrive(smach.State):
 class MoveTogetherSM(smach.StateMachine):
     def __init__(self, direction:String):
         smach.StateMachine.__init__(self, outcomes=["arrive"],
-                                    input_keys=['scene', 'robot_list'],
+                                    input_keys=['command', 'scene', 'robot_list'],
                                     output_keys=['scene', 'robot_list'])
         
         with self:

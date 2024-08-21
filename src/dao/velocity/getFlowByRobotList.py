@@ -85,10 +85,10 @@ def getOppositeMoveFLow(scene:str, robot_list:list) -> deque:
                 if id not in robot_list:
                      continue
                 
-                org_lin_vel = float(lin_vel["z"])
-                _sec = robot_goal["seconds"] * (org_lin_vel / COMEBACK_SPEED)
                 lin_vel = robot_goal["lin_vel"]
                 ang_vel = robot_goal["ang_vel"]
+                org_lin_vel = float(lin_vel["z"])
+                _sec = robot_goal["seconds"] * (org_lin_vel / COMEBACK_SPEED)
                 # delay_sec = robot_goal["move_delay"]
 
                 task = "%s %d %f %f %f %f %f %f %d" %(id, _sec, -float(lin_vel["x"]), -float(lin_vel["y"]), -float(COMEBACK_SPEED), 
