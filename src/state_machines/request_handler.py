@@ -37,18 +37,18 @@ class Request2State(smach.State):
     def execute(self, user_data):
         full_cmd_list = str(user_data.command).split()
 
-        user_data.command = full_cmd_list[0] # MOVE or HOME or MODULE or SCENE
+        action = full_cmd_list[0] # MOVE or HOME or MODULE or SCENE
         user_data.scene = "scene_" + full_cmd_list[1] # ex) scene_1
         user_data.robot_list = verifiedRobotList(user_data.scene, full_cmd_list[2:]) # ex) ['tb3_0', 'tb3_1', 'tb3_2']
 
         rospy.loginfo(f"[RequestInterpreter] SceneManager will track these robots: %s.", (user_data.robot_list))
-        rospy.loginfo(f"[RequestInterpreter] I saved state \'%s\' in SceneManager", user_data.command)
+        rospy.loginfo(f"[RequestInterpreter] I saved state \'%s\' in SceneManager", action)
         
-        if user_data.command == "MOVE":
+        if action == "MOVE":
             return "move"
-        elif user_data.command == "HOME":
+        elif action == "HOME":
             return "home"
-        elif user_data.command == "MODULE":
+        elif action == "MODULE":
             return "module"
         else:
             return "scene"
