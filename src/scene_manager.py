@@ -10,6 +10,7 @@ from state_machines.move.move_together import MoveTogetherSM
 from state_machines.spin.spin_together import SpinTogetherSM # It's for robot only to go forward
 from state_machines.control.control_module import CtrlModuleSM
 from state_machines.request_handler import RequestInterpreterSM
+from state_machines.move.go_home import GoHomeSM
                 
 class SceneManager:
     def __init__(self):
@@ -46,7 +47,7 @@ class SceneManager:
                                    transitions={'arrive': 'REQUEST'})
             smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(),
                                    transitions={'complete': 'REQUEST'})
-            smach.StateMachine.add('COME_BACK_BACKWARD', MoveTogetherSM(direction="backward"),
+            smach.StateMachine.add('COME_BACK_BACKWARD', GoHomeSM(),
                                    transitions={'arrive': 'REQUEST'})
             
             """
