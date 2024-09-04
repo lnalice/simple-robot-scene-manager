@@ -6,9 +6,6 @@ from std_msgs.msg import String
 
 from collections import deque
 
-# from dao.location.getSceneFlow import getMoveFLow #nav
-from dao.velocity.getFlowByRobotList import getMoveFLow, getOppositeMoveFLow # cmd_vel
-
 DISPLAY_TIME = 10.0
 
 class HomeRequest(smach.State):

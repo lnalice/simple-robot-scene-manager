@@ -2,7 +2,7 @@ import os
 from collections import deque
 import json
 
-json_rel_loc = 'data/scene_param.json'
+json_rel_loc = 'json/scene_param.json'
 base_path = os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))  # base path: scene_manager/src/
 json_loc = os.path.join(base_path, json_rel_loc) 
 

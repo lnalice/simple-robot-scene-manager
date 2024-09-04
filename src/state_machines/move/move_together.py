@@ -6,8 +6,7 @@ from std_msgs.msg import String
 
 from collections import deque
 
-# from dao.location.getSceneFlow import getMoveFLow #nav
-from dao.velocity.getFlowByRobotList import getMoveFLow, getOppositeMoveFLow # cmd_vel
+from dao.moveDao import selectMoveDataByScene # mySQL
 
 DISPLAY_TIME = 10.0
 
@@ -36,10 +35,10 @@ class MoveRequest(smach.State):
             rospy.loginfo("[MoveTogether] The waiting time has been set. I'll wait \"%s\" seconds...", display_time)
             rospy.sleep(display_time)
             
-            move_flow = getOppositeMoveFLow(user_data.scene, self.request_robot_list)
+            move_flow = selectMoveDataByScene(user_data.scene, isOpposite=True, robot_list=self.request_robot_list)
 
         else :
-            move_flow = getMoveFLow(user_data.scene, self.request_robot_list)
+            move_flow = selectMoveDataByScene(user_data.scene, isOpposite=False, robot_list=self.request_robot_list)
 
         user_data.robot_list = []
 

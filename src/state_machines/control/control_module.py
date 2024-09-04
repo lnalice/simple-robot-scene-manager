@@ -6,9 +6,7 @@ from std_msgs.msg import String
 
 from collections import deque
 
-# from dao.location.getSceneFlow import getCtrlFlow #nav
-# from dao.velocity.getFlowByRobotList import getCtrlFlow # cmd_vel
-from dao.position.getFlowByScene import getCtrlFlow, getOppositeDegreeFLow # module_pos(position mode)
+from dao.moduleDao import selectModuleDataByScene # mySQL
 
 class ControlRequest(smach.State):
     def __init__(self):
@@ -26,7 +24,7 @@ class ControlRequest(smach.State):
 
         self.request_robot_list = full_cmd_list[2:]
 
-        ctrl_flow = getCtrlFlow(user_data.scene)
+        ctrl_flow = selectModuleDataByScene(user_data.scene, isOpposite=False)
         
         user_data.robot_list =[]
 

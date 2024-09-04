@@ -1,7 +1,7 @@
 import os
 import json
 
-json_vel_rel_loc = 'data/scene_param_vel.json'
+json_vel_rel_loc = 'json/scene_param_vel.json'
 base_path = os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))  # base path: scene_manager/src/
 json_vel_loc = os.path.join(base_path, json_vel_rel_loc) 
 
@@ -19,7 +19,7 @@ def verifiedRobotList(scene:str, robot_list:list) -> list:
     all: bool = len(robot_list) == 0
 
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))
-    json_vel_loc = os.path.join(base_path, 'data/scene_param_vel.json') 
+    json_vel_loc = os.path.join(base_path, 'json/scene_param_vel.json') 
 
     print(json_vel_loc)
     # read json file

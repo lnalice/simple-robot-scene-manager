@@ -5,7 +5,7 @@ import smach_ros
 import smach_ros.monitor_state
 from std_msgs.msg import String
 
-from dao.velocity.verifySceneFlow import verifiedRobotList
+from provider.velocity.verifySceneFlow import verifiedRobotList
 
 """
 @request    SCENE  {scene_id} {robot_id} {robot_id
