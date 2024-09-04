@@ -1,0 +1,196 @@
+{
+    "scene_0": [
+        {
+            "robot_id": "tb3_2",
+            "seconds": 6,
+            "module_vel": 1000,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        }
+    ],
+    
+    "scene_1": [
+        {
+            "robot_id": "tb3_1",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        }
+    ],
+    "scene_2-1": [
+        {
+            "robot_id": "tb3_0",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+            
+        },
+        {
+            "robot_id": "tb3_1",
+            "seconds": 6,
+            "module_vel": -0.03,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 5
+        }
+    ],
+    "scene_2-2": [
+        {
+            "robot_id": "tb3_2",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+            
+        },
+        {
+            "robot_id": "tb3_3",
+            "seconds": 6,
+            "module_vel": -0.03,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 5
+        }
+    ],
+    "scene_3-1": [
+        {
+            "robot_id": "tb3_0",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+            
+        },
+        {
+            "robot_id": "tb3_1",
+            "seconds": 6,
+            "module_vel": -0.03,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 5
+        },
+        {
+            "robot_id": "tb3_2",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        }
+    ],
+    "scene_3-2": [
+        {
+            "robot_id": "tb3_0",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+            
+        },
+        {
+            "robot_id": "tb3_1",
+            "seconds": 6,
+            "module_vel": -0.03,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        },
+        {
+            "robot_id": "tb3_2",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        }
+    ],
+    "scene_4-1": [
+        {
+            "robot_id": "tb3_0",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+            
+        },
+        {
+            "robot_id": "tb3_1",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        },
+        {
+            "robot_id": "tb3_2",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        },
+        {
+            "robot_id": "tb3_3",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        }
+    ],
+    "scene_4-2": [
+        {
+            "robot_id": "tb3_0",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+            
+        },
+        {
+            "robot_id": "tb3_1",
+            "seconds": 6,
+            "module_vel": -0.03,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        },
+        {
+            "robot_id": "tb3_2",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        },
+        {
+            "robot_id": "tb3_3",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        }
+    ],
+    "scene_4-3": [
+        {
+            "robot_id": "tb3_0",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+            
+        },
+        {
+            "robot_id": "tb3_1",
+            "seconds": 6,
+            "module_vel": -0.03,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        },
+        {
+            "robot_id": "tb3_2",
+            "seconds": 0,
+            "module_vel": 0.0,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 0
+        },
+        {
+            "robot_id": "tb3_3",
+            "seconds": 6,
+            "module_vel": -0.03,
+            "module_pos": {"z": 0.0, "x": 0.0 },
+            "delay": 20
+        }
+    ]
+}
