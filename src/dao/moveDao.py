@@ -1,6 +1,6 @@
 from collections import deque
-from db.connection import connect_to_mysql
-from db.config import mysql_config
+from dao.db.connection import connect_to_mysql
+from dao.db.config import mysql_config
 
 cnx = connect_to_mysql(mysql_config, attempts=3)
 

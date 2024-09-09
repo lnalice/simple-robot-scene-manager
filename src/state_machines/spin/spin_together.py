@@ -6,8 +6,7 @@ from std_msgs.msg import String
 
 from collections import deque
 
-# from dao.getSceneFlow import getMoveFLow # nav
-from dao.velocity.getFlowByScene import getMoveFLow # cmd_vel
+from provider.velocity.getFlowByScene import getMoveFLow # cmd_vel
 
 DISPLAY_TIME = 10
 
