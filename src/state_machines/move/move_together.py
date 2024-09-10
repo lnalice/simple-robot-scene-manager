@@ -47,7 +47,7 @@ class MoveRequest(smach.State):
             return 'none'
         
         while move_flow:
-            rospy.sleep(0.1)
+            rospy.sleep(0.3)
             
             goal_data = move_flow.popleft() 
             

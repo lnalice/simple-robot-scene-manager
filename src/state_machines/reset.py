@@ -30,7 +30,7 @@ class ResetCtrl(smach.State):
         self.request_robot_list = []
 
     def execute(self, user_data):
-        rospy.sleep(0.1)
+        rospy.sleep(0.3)
         ctrl_flow = deque()
 
         full_cmd_list = str(user_data.command).split()
@@ -39,6 +39,9 @@ class ResetCtrl(smach.State):
         for robotID in self.request_robot_list:
             (moduleState,) = moduleStateByRobotID(robotID)
             (degZ, degX) = moduleState2deg(moduleState)
+
+            if degZ == 0 and degX == 0:
+                continue
 
             module_msg = "%s %f %f %d" %(robotID, degZ, degX, 0) #delay = 0
             ctrl_flow.append(module_msg)
@@ -80,8 +83,12 @@ class ResetMove(smach.State):
         for robotID in self.request_robot_list:
             displacementX, displacementZ = displacementByRobotID(robotID)
 
-            linX = displacementX / GO_HOME_SECONDS
+            if displacmentX == 0 and displacementZ == 0:
+                continue
+
+            linX = -float(displacementX) / GO_HOME_SECONDS
             angZ = displacementZ / GO_HOME_SECONDS
+
 
             move_msg = "%s %d %f 0 0 0 0 %f %f" %(robotID, GO_HOME_SECONDS, linX, angZ, 0) #delay = 0
             sorted_list.append(move_msg)
