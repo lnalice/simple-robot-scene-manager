@@ -26,7 +26,7 @@ class ControlRequest(smach.State):
 
         self.request_robot_list = full_cmd_list[2:]
 
-        ctrl_flow = selectModuleDataByScene(user_data.scene, isOpposite=False)
+        ctrl_flow = selectModuleDataByScene(user_data.scene, isOpposite=False, robot_list=self.request_robot_list)
         
         user_data.robot_list =[]
 

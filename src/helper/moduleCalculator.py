@@ -4,7 +4,7 @@ _degX = [0, 162.5, 323, 485.5, 650]
 
 def moduleState2deg(moduleState: float) -> tuple:
     
-    target_idx = int(moduleState *4)
+    target_idx = max(0, min(int(moduleState * 4), 4))
 
     return (-_degZ[target_idx], -_degX[target_idx])
 

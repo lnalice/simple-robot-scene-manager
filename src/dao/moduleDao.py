@@ -2,7 +2,7 @@ from collections import deque
 from dao.db.connection import connect_to_mysql
 from dao.db.config import mysql_config
 
-def selectModuleDataByScene (scene: str, isOpposite: bool) -> deque:
+def selectModuleDataByScene (scene: str, isOpposite: bool, robot_list: list) -> deque:
     cnx = connect_to_mysql(mysql_config, attempts=3)
     result = cnx.cursor(buffered=True)
     
@@ -16,6 +16,9 @@ def selectModuleDataByScene (scene: str, isOpposite: bool) -> deque:
 
     for (robotID, degZ, degX, delay) in result:
         task =""
+
+        if robotID not in robot_list:
+            continue
 
         if degX == 0 and degZ == 0:
             continue
