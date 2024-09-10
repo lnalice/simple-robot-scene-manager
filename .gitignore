@@ -1,5 +1,8 @@
 .env
 
+### MySQL ###
+cpy-errors.log
+
 ### CMake ###
 CMakeLists.txt.user
 CMakeCache.txt

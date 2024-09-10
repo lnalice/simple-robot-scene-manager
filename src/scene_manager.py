@@ -11,6 +11,7 @@ from state_machines.spin.spin_together import SpinTogetherSM # It's for robot on
 from state_machines.control.control_module import CtrlModuleSM
 from state_machines.request_handler import RequestInterpreterSM
 from state_machines.move.go_home import GoHomeSM
+from state_machines.reset import ResetSM
                 
 class SceneManager:
     def __init__(self):
@@ -30,7 +31,7 @@ class SceneManager:
                                    transitions={'scene': 'SCENE_MOVE',
                                                 'move': 'MOVE',
                                                 'module': 'CTRL_MODULE',
-                                                'home': 'COME_BACK_BACKWARD'})
+                                                'home': 'RESET'})
             """
             [ follow the scene ]
             """
@@ -38,8 +39,8 @@ class SceneManager:
                                    transitions={'arrive': 'SCENE_CTRL_MODULE'})
             smach.StateMachine.add('SCENE_CTRL_MODULE', CtrlModuleSM(),
                                    transitions={'complete': 'SCENE_COME_BACK_BACKWARD'})
-            smach.StateMachine.add('SCENE_COME_BACK_BACKWARD', MoveTogetherSM(direction="backward"),
-                                   transitions={'arrive': 'REQUEST'})
+            smach.StateMachine.add('RESET', ResetSM(),
+                                   transitions={'complete': 'REQUEST'})
             """
             [ custom command ]
             """
@@ -47,8 +48,8 @@ class SceneManager:
                                    transitions={'arrive': 'REQUEST'})
             smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(),
                                    transitions={'complete': 'REQUEST'})
-            smach.StateMachine.add('COME_BACK_BACKWARD', GoHomeSM(),
-                                   transitions={'arrive': 'REQUEST'})
+            smach.StateMachine.add('RESET', ResetSM(),
+                                   transitions={'complete': 'REQUEST'})
             
             """
             ** If you want robot only to go forward
