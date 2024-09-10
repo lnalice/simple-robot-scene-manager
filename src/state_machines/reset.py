@@ -30,6 +30,7 @@ class ResetCtrl(smach.State):
         self.request_robot_list = []
 
     def execute(self, user_data):
+        rospy.sleep(0.1)
         ctrl_flow = deque()
 
         full_cmd_list = str(user_data.command).split()
@@ -94,6 +95,8 @@ class ResetMove(smach.State):
             return 'none'
         
         while move_flow:
+            rospy.sleep(0.1)
+            
             goal_data = move_flow.popleft() 
 
             self.move_pub.publish(goal_data)

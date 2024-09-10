@@ -34,6 +34,7 @@ class ControlRequest(smach.State):
             return 'none'
         
         while ctrl_flow:
+            rospy.sleep(0.1)
 
             goal_data = ctrl_flow.popleft()
 
