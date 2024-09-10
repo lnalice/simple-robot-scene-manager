@@ -2,12 +2,12 @@ from collections import deque
 from dao.db.connection import connect_to_mysql
 from dao.db.config import mysql_config
 
-cnx = connect_to_mysql(mysql_config, attempts=3)
-
 def selectMoveDataByScene (scene: str, isOpposite: bool, robot_list: list) -> deque:
+    cnx = connect_to_mysql(mysql_config, attempts=3)
+    result = cnx.cursor(buffered=True)
+    
     move_flow = deque()
 
-    result = cnx.cursor(buffered=True)
     query = (
         "SELECT robotID, seconds, linX, angZ, delay FROM SceneMove "
         "WHERE sceneID = %s"

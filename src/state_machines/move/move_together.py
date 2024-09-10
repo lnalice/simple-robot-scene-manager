@@ -74,8 +74,8 @@ class OnTheMove(smach_ros.MonitorState):
         if result[0] in user_data.robot_list:
             # update current displacement of robot
             disX, disZ = displacementByRobotID(robotID=result[0])
-            newDisX = disX + result[1] * result[2]
-            newDisZ = disZ + result[1] * result[7]
+            newDisX = float(disX) + float(result[1]) * float(result[2])
+            newDisZ = float(disZ) + float(result[1]) * float(result[7])
 
             updateRobotDisplacement(robotID=result[0], displacementX=newDisX, displacementZ=newDisZ)
 
