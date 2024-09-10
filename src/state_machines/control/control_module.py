@@ -18,8 +18,7 @@ class ControlRequest(smach.State):
         self.request_robot_list = []
 
     def execute(self, user_data):
-        rospy.sleep(0.1)
-
+        
         full_cmd_list = str(user_data.command).split()
 
         self.request_robot_list = full_cmd_list[2:]
