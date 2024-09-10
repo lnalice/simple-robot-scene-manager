@@ -10,13 +10,28 @@ UPDATE a robot's status
 - current location: displacementX, displacementZ
     (calculate the accumulated velocity value on the x-axis and z-axis)
 """
-def updateRobotCurrentStatus (robotID, moduleState, displacementX, displacementZ) -> bool:
-    updatedStatusInfo:list = [moduleState, displacementX, displacementZ, str(robotID)]
+def updateRobotModuleState (robotID, moduleState) -> bool:
+    updatedStatusInfo:list = [moduleState, str(robotID)]
 
     cur = cnx.cursor(buffered=True)
     query = (
         "UPDATE Robot"
-        "SET moduleState = %s, displacementX = %s, displacementZ = %s "
+        "SET moduleState = %s "
+        "WHERE id = %s"
+    )
+    cur.execute(query, updatedStatusInfo)
+
+    # cnx.close()
+
+    return True
+
+def updateRobotDisplacement (robotID, displacementX, displacementZ) -> bool:
+    updatedStatusInfo:list = [displacementX, displacementZ, str(robotID)]
+
+    cur = cnx.cursor(buffered=True)
+    query = (
+        "UPDATE Robot"
+        "SET displacementX = %s, displacementZ = %s "
         "WHERE id = %s"
     )
     cur.execute(query, updatedStatusInfo)

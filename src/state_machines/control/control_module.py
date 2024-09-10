@@ -7,6 +7,9 @@ from std_msgs.msg import String
 from collections import deque
 
 from dao.moduleDao import selectModuleDataByScene # mySQL
+from dao.RobotDao import updateRobotModuleState, moduleStateByRobotID # mySQL
+
+from helper.moduleCalculator import deg2moduleState
 
 class ControlRequest(smach.State):
     def __init__(self):
@@ -57,6 +60,12 @@ class InControl(smach_ros.MonitorState):
         rospy.loginfo("[CtrlModule] result %s", str(result))
 
         if result[0] in user_data.robot_list:
+            # update current displacement of robot
+            (moduleState,)= moduleStateByRobotID(robotID=result[0])
+            newState = moduleState + deg2moduleState(degZ=result[1], degX=result[2])
+
+            updateRobotModuleState(robotID=result[0], moduleState=newState)
+
             user_data.robot_list.remove(result[0])
             rospy.loginfo(f"robot %s has completed control", result[0])
             rospy.loginfo("[CtrlModule] robot_list is updated now (%s)", str(user_data.robot_list))

@@ -7,6 +7,7 @@ from std_msgs.msg import String
 from collections import deque
 
 from dao.moveDao import selectMoveDataByScene # mySQL
+from dao.RobotDao import updateRobotDisplacement, displacementByRobotID # mySQL
 
 DISPLAY_TIME = 10.0
 
@@ -71,6 +72,13 @@ class OnTheMove(smach_ros.MonitorState):
         result = str(res_msg.data).split()
 
         if result[0] in user_data.robot_list:
+            # update current displacement of robot
+            disX, disZ = displacementByRobotID(robotID=result[0])
+            newDisX = disX + result[1] * result[2]
+            newDisZ = disZ + result[1] * result[7]
+
+            updateRobotDisplacement(robotID=result[0], displacementX=newDisX, displacementZ=newDisZ)
+
             user_data.robot_list.remove(result[0])
             rospy.loginfo(f"robot %s arrived", result[0])
             rospy.loginfo("[MoveTogether] robot_list is updated now (%s)", str(user_data.robot_list))
