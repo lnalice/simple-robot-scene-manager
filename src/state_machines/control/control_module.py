@@ -62,9 +62,10 @@ class InControl(smach_ros.MonitorState):
         if result[0] in user_data.robot_list:
             # update current displacement of robot
             (moduleState,)= moduleStateByRobotID(robotID=result[0])
-            newState = moduleState + deg2moduleState(degZ=result[1], degX=result[2])
+            newState = moduleState + deg2moduleState(degZ=float(result[1]), degX=float(result[2]))
 
-            updateRobotModuleState(robotID=result[0], moduleState=newState)
+            rospy.logwarn(newState)
+            updateRobotModuleState(robotID=result[0], moduleState=float(newState))
 
             user_data.robot_list.remove(result[0])
             rospy.loginfo(f"robot %s has completed control", result[0])

@@ -6,7 +6,7 @@ from std_msgs.msg import String
 
 from collections import deque
 
-from dao.RobotDao import updateRobotCurrentStatus, moduleStateByRobotID, displacementByRobotID #MySQL
+from dao.RobotDao import moduleStateByRobotID, displacementByRobotID #MySQL
 
 from state_machines.move.move_together import OnTheMove #MonitorState (move)
 from state_machines.control.control_module import InControl #MonitorState (control module)

@@ -2,8 +2,6 @@ from collections import deque
 from dao.db.connection import connect_to_mysql
 from dao.db.config import mysql_config
 
-cnx = connect_to_mysql(mysql_config, attempts=3)
-
 """
 UPDATE a robot's status
 - current module state: moduleState (4steps: 0, 0.25, 0.5, 0.75, 1)
@@ -11,32 +9,38 @@ UPDATE a robot's status
     (calculate the accumulated velocity value on the x-axis and z-axis)
 """
 def updateRobotModuleState (robotID, moduleState) -> bool:
-    updatedStatusInfo:list = [moduleState, str(robotID)]
 
+    cnx = connect_to_mysql(mysql_config, attempts=3)
     cur = cnx.cursor(buffered=True)
+
+    updatedStatusInfo = [str(moduleState), str(robotID)]
     query = (
-        "UPDATE Robot"
+        "UPDATE Robot "
         "SET moduleState = %s "
         "WHERE id = %s"
     )
-    cur.execute(query, updatedStatusInfo)
-
-    # cnx.close()
+    result = cur.execute(query, updatedStatusInfo)
+    
+    cnx.commit()
+    cnx.close()
 
     return True
 
 def updateRobotDisplacement (robotID, displacementX, displacementZ) -> bool:
-    updatedStatusInfo:list = [displacementX, displacementZ, str(robotID)]
 
+    cnx = connect_to_mysql(mysql_config, attempts=3)
     cur = cnx.cursor(buffered=True)
+
+    updatedStatusInfo:list = [displacementX, displacementZ, str(robotID)]
     query = (
-        "UPDATE Robot"
+        "UPDATE Robot "
         "SET displacementX = %s, displacementZ = %s "
         "WHERE id = %s"
     )
     cur.execute(query, updatedStatusInfo)
 
-    # cnx.close()
+    cnx.commit()
+    cnx.close()
 
     return True
 
@@ -44,6 +48,8 @@ def updateRobotDisplacement (robotID, displacementX, displacementZ) -> bool:
 GET a robot's status
 """
 def moduleStateByRobotID(robotID: str) -> tuple:
+
+    cnx = connect_to_mysql(mysql_config, attempts=3)
     cur = cnx.cursor(buffered=True)
 
     query =  (
@@ -54,11 +60,12 @@ def moduleStateByRobotID(robotID: str) -> tuple:
 
     statusInfo:tuple = cur.fetchone()
 
-    # cnx.close()
+    cnx.close()
 
     return statusInfo
 
 def displacementByRobotID(robotID: str) -> tuple:
+    cnx = connect_to_mysql(mysql_config, attempts=3)
     cur = cnx.cursor(buffered=True)
 
     query =  (
@@ -69,6 +76,6 @@ def displacementByRobotID(robotID: str) -> tuple:
 
     statusInfo:tuple = cur.fetchone()
 
-    # cnx.close()
+    cnx.close()
 
     return statusInfo

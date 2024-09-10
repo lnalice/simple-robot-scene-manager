@@ -38,8 +38,8 @@ class SceneManager:
             smach.StateMachine.add('SCENE_MOVE', MoveTogetherSM(direction="forward"),
                                    transitions={'arrive': 'SCENE_CTRL_MODULE'})
             smach.StateMachine.add('SCENE_CTRL_MODULE', CtrlModuleSM(),
-                                   transitions={'complete': 'SCENE_COME_BACK_BACKWARD'})
-            smach.StateMachine.add('RESET', ResetSM(),
+                                   transitions={'complete': 'SCENE_RESET'})
+            smach.StateMachine.add('SCENE_RESET', ResetSM(),
                                    transitions={'complete': 'REQUEST'})
             """
             [ custom command ]

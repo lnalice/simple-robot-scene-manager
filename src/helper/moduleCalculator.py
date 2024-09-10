@@ -10,13 +10,13 @@ def moduleState2deg(moduleState: float) -> tuple:
 
 def deg2moduleState(degZ: float, degX: float) -> float:
     target_idx = 0
-    
-    for dz in enumerate(_degZ):
-        if abs(dz) >= abs(degZ):
+
+    for dz in _degZ:
+        if abs(float(dz)) >= abs(degZ):
             break
         target_idx +=1
     
-    if degZ < 0:
+    if degZ > 0:
         return -_steps[target_idx]
     
     return _steps[target_idx]
