@@ -24,7 +24,7 @@ def selectModuleDataByScene (scene: str, isOpposite: bool, robot_list: list) -> 
             continue
 
         if isOpposite:
-            task = "%s %f %f %d" %(robotID, -float(degZ), -float(degX), delay)
+            task = "%s %f %f %d" %(robotID, -float(degZ), -float(degX), 0)
         else:
             task = "%s %f %f %d" %(robotID, degZ, degX, delay)
         ctrl_flow.append(task)

@@ -11,23 +11,35 @@ from dao.RobotDao import updateRobotModuleState, moduleStateByRobotID # mySQL
 
 from helper.moduleCalculator import deg2moduleState
 
+DISPLAY_TIME = 10.0
+
 class ControlRequest(smach.State):
-    def __init__(self):
+    def __init__(self, direction:String):
         smach.StateMachine.__init__(self, outcomes=["done", "none"],
                                     input_keys=['command', 'scene', 'robot_list'],
                                     output_keys=['robot_list'])
         self.ctrl_pub = rospy.Publisher('/scene_manager/ctrl_module_req', String, queue_size=1)
 
+        self.direction = direction        
         self.request_robot_list = []
 
     def execute(self, user_data):
+        ctrl_flow = deque()
         
         full_cmd_list = str(user_data.command).split()
 
+        display_time = DISPLAY_TIME if full_cmd_list[0] == "SCENE" else 0
+
         self.request_robot_list = full_cmd_list[2:]
 
-        ctrl_flow = selectModuleDataByScene(user_data.scene, isOpposite=False, robot_list=self.request_robot_list)
+        if self.direction == "backward":
+            ctrl_flow = selectModuleDataByScene(user_data.scene, isOpposite=True, robot_list=self.request_robot_list)
+            rospy.loginfo("[CtrlModule] The waiting time has been set. I'll wait \"%s\" seconds...", display_time)
+            rospy.sleep(display_time)
         
+        else:
+            ctrl_flow = selectModuleDataByScene(user_data.scene, isOpposite=False, robot_list=self.request_robot_list)
+
         user_data.robot_list =[]
 
         if len(ctrl_flow) == 0:
@@ -79,12 +91,12 @@ class InControl(smach_ros.MonitorState):
 
 
 class CtrlModuleSM(smach.StateMachine):
-    def __init__(self):
+    def __init__(self, direction:String):
         smach.StateMachine.__init__(self, outcomes=["complete"],
                                     input_keys=['command', 'scene', 'robot_list'],
                                     output_keys=['robot_list'])
         with self:
-            self.add('CONTROL_REQUEST', ControlRequest(),
+            self.add('CONTROL_REQUEST', ControlRequest(direction=direction),
                      transitions={'done': 'IN_CONTROL',
                                   'none': 'complete'})
             self.add('IN_CONTROL', InControl(),

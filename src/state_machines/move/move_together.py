@@ -9,8 +9,6 @@ from collections import deque
 from dao.moveDao import selectMoveDataByScene # mySQL
 from dao.RobotDao import updateRobotDisplacement, displacementByRobotID # mySQL
 
-DISPLAY_TIME = 10.0
-
 class MoveRequest(smach.State):
     def __init__(self, direction:String):
         smach.State.__init__(self, outcomes=["done", "none"],
@@ -28,15 +26,14 @@ class MoveRequest(smach.State):
 
         full_cmd_list = str(user_data.command).split()
 
-        display_time = DISPLAY_TIME if full_cmd_list[0] == "SCENE" else 0
-
         self.request_robot_list = full_cmd_list[2:]
         
         if self.direction == "backward":
-            rospy.loginfo("[MoveTogether] The waiting time has been set. I'll wait \"%s\" seconds...", display_time)
-            rospy.sleep(display_time)
-            
             move_flow = selectMoveDataByScene(user_data.scene, isOpposite=True, robot_list=self.request_robot_list)
+            
+            sorted_list = list(move_flow)
+            sorted_list.sort(key=lambda x: x.split()[2])
+            move_flow = deque(sorted_list)
 
         else :
             move_flow = selectMoveDataByScene(user_data.scene, isOpposite=False, robot_list=self.request_robot_list)
@@ -47,6 +44,9 @@ class MoveRequest(smach.State):
             return 'none'
         
         while move_flow:
+            if self.direction == "backward":
+                rospy.sleep(3)
+            
             rospy.sleep(0.3)
             
             goal_data = move_flow.popleft() 

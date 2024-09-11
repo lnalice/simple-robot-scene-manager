@@ -37,19 +37,27 @@ class SceneManager:
             """
             smach.StateMachine.add('SCENE_MOVE', MoveTogetherSM(direction="forward"),
                                    transitions={'arrive': 'SCENE_CTRL_MODULE'})
-            smach.StateMachine.add('SCENE_CTRL_MODULE', CtrlModuleSM(),
-                                   transitions={'complete': 'SCENE_RESET'})
-            smach.StateMachine.add('SCENE_RESET', ResetSM(),
-                                   transitions={'complete': 'REQUEST'})
+            smach.StateMachine.add('SCENE_CTRL_MODULE', CtrlModuleSM(direction="forward"),
+                                   transitions={'complete': 'SCENE_RESET_MODULE'})
+            smach.StateMachine.add('SCENE_RESET_MODULE', CtrlModuleSM(direction="backward"),
+                                   transitions={'complete': 'SCENE_RESET_MOVE'})
+            smach.StateMachine.add('SCENE_RESET_MOVE', MoveTogetherSM(direction="backward"),
+                                   transitions={'arrive': 'REQUEST'})
+            # smach.StateMachine.add('SCENE_RESET', ResetSM(),
+            #                        transitions={'complete': 'REQUEST'})
             """
             [ custom command ]
             """
             smach.StateMachine.add('MOVE', MoveTogetherSM(direction="forward"),
                                    transitions={'arrive': 'REQUEST'})
-            smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(),
+            smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(direction="forward"),
                                    transitions={'complete': 'REQUEST'})
-            smach.StateMachine.add('RESET', ResetSM(),
-                                   transitions={'complete': 'REQUEST'})
+            smach.StateMachine.add('RESET', CtrlModuleSM(direction="backward"),
+                                   transitions={'complete': 'RESET_FIN'})
+            smach.StateMachine.add('RESET_FIN', MoveTogetherSM(direction="backward"),
+                                   transitions={'arrive': 'REQUEST'})
+            # smach.StateMachine.add('RESET', ResetSM(),
+            #                        transitions={'complete': 'REQUEST'})
             
             """
             ** If you want robot only to go forward
