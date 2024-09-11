@@ -31,7 +31,9 @@ class SceneManager:
                                    transitions={'scene': 'SCENE_MOVE',
                                                 'move': 'MOVE',
                                                 'module': 'CTRL_MODULE',
-                                                'home': 'RESET'})
+                                                'home': 'HOME',
+                                                'min': 'MINIMIZE_MODULE',
+                                                'reset': 'RESET'})
             """
             [ follow the scene ]
             """
@@ -52,6 +54,12 @@ class SceneManager:
                                    transitions={'arrive': 'REQUEST'})
             smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(direction="forward"),
                                    transitions={'complete': 'REQUEST'})
+            
+            smach.StateMachine.add('HOME', MoveTogetherSM(direction="backward"),
+                                   transitions={'arrive': 'REQUEST'})
+            smach.StateMachine.add('MINIMIZE_MODULE', CtrlModuleSM(direction="backward"),
+                                   transitions={'complete': 'REQUEST'})
+
             smach.StateMachine.add('RESET', CtrlModuleSM(direction="backward"),
                                    transitions={'complete': 'RESET_FIN'})
             smach.StateMachine.add('RESET_FIN', MoveTogetherSM(direction="backward"),

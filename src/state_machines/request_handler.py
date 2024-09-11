@@ -30,7 +30,7 @@ class RequestMonitor(smach_ros.MonitorState):
     
 class Request2State(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=['scene', 'move', 'module', 'home'],
+        smach.State.__init__(self, outcomes=['scene', 'move', 'module', 'home', 'reset', 'min'],
                              input_keys=['scene', 'robot_list', 'command'],
                              output_keys=['scene', 'robot_list', 'command'])
         
@@ -51,12 +51,16 @@ class Request2State(smach.State):
             return "home"
         elif action == "MODULE":
             return "module"
+        elif action == "MIN":
+            return "min"
+        elif action == "RESET":
+            return "reset"
         else:
             return "scene"
 
 class RequestInterpreterSM(smach.StateMachine):
     def __init__(self):
-        smach.StateMachine.__init__(self, outcomes=['scene', 'move', 'module', 'home'],
+        smach.StateMachine.__init__(self, outcomes=['scene', 'move', 'module', 'home', 'reset', 'min'],
                                     input_keys=['scene', 'robot_list', 'command'],
                                     output_keys=['scene', 'robot_list', 'command'])
         
