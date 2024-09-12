@@ -44,9 +44,6 @@ class MoveRequest(smach.State):
             return 'none'
         
         while move_flow:
-            if self.direction == "backward":
-                rospy.sleep(3)
-            
             rospy.sleep(0.3)
             
             goal_data = move_flow.popleft() 
@@ -57,6 +54,9 @@ class MoveRequest(smach.State):
             rospy.loginfo("[MoveTogether] data published now: %s", goal_data)
 
             user_data.robot_list.append(goal_data.split()[0])
+
+            if self.direction == "backward":
+                rospy.sleep(3)
         
         rospy.loginfo("[MoveTogether] robot_list is updated now (%s)", str(user_data.robot_list))
 
