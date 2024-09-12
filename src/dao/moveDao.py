@@ -24,7 +24,7 @@ def selectMoveDataByScene (scene: str, isOpposite: bool, robot_list: list) -> de
             continue
 
         if isOpposite:
-            task = "%s %d %f 0 0 0 0 %f %f" %(robotID, seconds, -linX, angZ, delay)
+            task = "%s %d %f 0 0 0 0 %f %f" %(robotID, seconds, -linX, angZ, 0)
         else:
             task = "%s %d %f 0 0 0 0 %f %f" %(robotID, seconds, linX, angZ, delay)
         move_flow.append(task)
