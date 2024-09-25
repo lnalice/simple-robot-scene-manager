@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import signal
 
 import rospy
 import smach
@@ -12,7 +13,14 @@ from state_machines.control.control_module import CtrlModuleSM
 from state_machines.request_handler import RequestInterpreterSM
 from state_machines.move.go_home import GoHomeSM
 from state_machines.reset import ResetSM
-                
+
+def signal_handler(signum, frame):
+    res = input("\n[Scene Manager] Ctrl-c was pressed. Do you want to exit? (y/n) ")
+    if res =='y':
+        exit(1)
+
+signal.signal(signal.SIGINT, signal_handler)
+
 class SceneManager:
     def __init__(self):
 
