@@ -83,7 +83,7 @@ class ResetMove(smach.State):
         for robotID in self.request_robot_list:
             displacementX, displacementZ = displacementByRobotID(robotID)
 
-            if displacmentX == 0 and displacementZ == 0:
+            if displacementX == 0 and displacementZ == 0:
                 continue
 
             linX = -float(displacementX) / GO_HOME_SECONDS
