@@ -1,34 +1,35 @@
-#!/usr/bin/env python3
-
 import smach
-
-import queue
 
 from state_machines.move.move_together import MoveTogetherSM
 from state_machines.control.control_module import CtrlModuleSM
 from state_machines.tasks.task_consumer import TaskConsumerSM
 
-class TaskSchedulerSM:
-    def __init__(self, sync_queue: queue.Queue):
+class TaskSchedulerSM(smach.StateMachine):
+    def __init__(self):
+        smach.StateMachine.__init__(self, outcomes=['unknown', 'none', 'end'],
+                                     input_keys=['sync_queue'],
+                                     output_keys=['sync_queue'])
+        
+        self.set_initial_state(['CONSUME'])
+        self.userdata.command = ''
+        self.userdata.scene = ''
+        self.userdata.robot_list = []
 
-        self.sm = smach.StateMachine(outcomes=['end'])
-        self.sm.set_initial_state(['REQUEST'])
-        self.sm.userdata.command = ''
-        self.sm.userdata.scene = ''
-        self.sm.userdata.robot_list = []
-
-        with self.sm:
-            smach.StateMachine.add('REQUEST', TaskConsumerSM(sync_queue),
-                                   transitions={'move': 'MOVE',
-                                                'module': 'CTRL_MODULE',
-                                                'home': 'HOME',
-                                                'min': 'MINIMIZE_MODULE'})
+        with self:
+            smach.StateMachine.add('CONSUME', TaskConsumerSM(),
+                                   transitions={'MOVE': 'MOVE',
+                                                'MODULE': 'CTRL_MODULE',
+                                                'HOME': 'HOME',
+                                                'MIN': 'MINIMIZE_MODULE'})
 
             smach.StateMachine.add('MOVE', MoveTogetherSM(direction="forward"),
-                                   transitions={'arrive': 'REQUEST'})
+                                   transitions={'arrive': 'CONSUME'})
             smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(direction="forward"),
-                                   transitions={'complete': 'REQUEST'})
+                                   transitions={'complete': 'CONSUME'})
             smach.StateMachine.add('HOME', MoveTogetherSM(direction="backward"),
-                                   transitions={'arrive': 'REQUEST'})
+                                   transitions={'arrive': 'CONSUME'})
             smach.StateMachine.add('MINIMIZE_MODULE', CtrlModuleSM(direction="backward"),
-                                   transitions={'complete': 'REQUEST'})
+                                   transitions={'complete': 'CONSUME'})
+    
+    def execute(self, parent_ud=...):
+        return super().execute(parent_ud)

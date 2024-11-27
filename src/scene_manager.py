@@ -4,7 +4,6 @@ import signal
 
 import rospy
 import smach
-import smach_ros
 
 import queue
 
@@ -24,28 +23,23 @@ class SceneManager:
         rospy.init_node("scene_manager_node")
 
         self.concurrence = smach.Concurrence(
-            outcomes=['exit'],
+            outcomes=['exit', 'done'],
             default_outcome='exit',
             child_termination_cb=lambda outcome_map: False,
-            outcome_cb=lambda outcome_map: 'exit'
+            outcome_cb=lambda outcome_map: 'exit',
+            input_keys=[], output_keys=[]
         )
 
         self.concurrence.userdata.sync_queue = queue.Queue()
 
         with self.concurrence:
-            smach.Concurrence.add('TASK_ASSIGNMENT', TaskAssignmentSM(self.concurrence.userdata.sync_queue),
-                                  remapping={'sync_queue':'sync_queue'})
-            smach.Concurrence.add('TASK_SCHEDULER', TaskSchedulerSM(self.concurrence.userdata.sync_queue),
-                                  remapping={'sync_queue':'sync_queue'})
+            smach.Concurrence.add('TASK_ASSIGNMENT', TaskAssignmentSM())
+            smach.Concurrence.add('TASK_SCHEDULER', TaskSchedulerSM())
 
 if __name__ == "__main__":
     scene_manager = SceneManager()
-
-    sis = smach_ros.IntrospectionServer('scene_manager_node', scene_manager.concurrence, '/scene_manager')
-    sis. start()
 
     outcome = scene_manager.concurrence.execute()
     rospy.loginfo("[Scene Manager] final state is %s. done.", outcome)
     
     rospy.spin()
-    sis.stop()

@@ -1,2 +1,2 @@
-baseAction = { "move", "home",
-               "module", "min"}
+baseAction = { "MOVE", "HOME",
+               "MODULE", "MIN"}

@@ -3,19 +3,17 @@ import smach
 
 import queue
 
-from config.actionList import baseAction
+from state_machines.tasks.config.actionList import baseAction
 
 class Task2State(smach.State):
-    def __init__(self, sync_queue: queue.Queue):
-        smach.State.__init__(self, outcomes=list(baseAction),
+    def __init__(self):
+        smach.State.__init__(self, outcomes=list(baseAction) + ['unknown', 'none'],
                              input_keys=['sync_queue', 'scene', 'robot_list', 'command'],
                              output_keys=['sync_queue', 'scene', 'robot_list', 'command'])
         
-        self.sync_queue = sync_queue
-        
     def execute(self, user_data):
         try:
-            user_data.command = self.sync_queue.get()
+            user_data.command = user_data.sync_queue.get()
             task_list = user_data.command.split()
 
             action = task_list[0] # MOVE or HOME or MODULE or SCENE
@@ -33,11 +31,14 @@ class Task2State(smach.State):
             return 'none'
         
 
-class TaskConsumerSM():
-    def __init__(self, sync_queue: queue.Queue):
-        self.sm = smach.StateMachine(outcomes=list(baseAction) + ['unknown', 'none'])
+class TaskConsumerSM(smach.StateMachine):
+    def __init__(self):
+        smach.StateMachine.__init__(self, 
+                                    outcomes=list(baseAction) + ['unknown', 'none'],
+                                    input_keys=['sync_queue'],
+                                    output_keys=['sync_queue'])
 
-        with self.sm:
-            smach.StateMachine.add('READ_TASK', Task2State(sync_queue),
+        with self:
+            smach.StateMachine.add('READ_TASK', Task2State(),
                                    transitions={'none': 'READ_TASK',
                                                 'unknown': 'READ_TASK'})
