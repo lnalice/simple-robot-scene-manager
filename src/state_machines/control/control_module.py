@@ -7,10 +7,11 @@ from std_msgs.msg import String
 from collections import deque
 
 from dao.sceneModuleDao import selectModuleDataByScene # mySQL
-from dao.RobotDao import updateRobotModuleState, selectModuleStateByRobotID # mySQL
+from dao.RobotDao import updateRobotModuleState, selectModuleStateByRobotID, updateRobotStatus # mySQL
 from dao.moduleDao import selectDegreeByState, selectStateByDegree # mySQL
 
 DISPLAY_TIME = 10.0
+IDLE = "IDLE"
 
 class ControlRequest(smach.State):
     def __init__(self, direction:String):
@@ -51,8 +52,13 @@ class ControlRequest(smach.State):
 
             self.ctrl_pub.publish(goal_data)
 
-            rospy.loginfo("[CtrlModule] ctrl_module_req is published now.")
-            rospy.loginfo("[CtrlModule] data published now: %s", goal_data)
+            rospy.loginfo("[CtrlModule] ctrl_module_req is published now: %s", goal_data)
+
+            robotID = goal_data.split()[0]
+
+            # 로봇 상태 업데이트 (모듈제어 중)
+            updateRobotStatus(robotID=robotID, status=full_cmd_list[0])
+            rospy.logwarn(f"[CtrlModule] robot {robotID}'s status updated to {full_cmd_list[0]}.")
 
             user_data.robot_list.append(goal_data.split()[0])
         
@@ -74,7 +80,7 @@ class InControl(smach_ros.MonitorState):
         if result[0] in user_data.robot_list:
             newState:float = 0
 
-            # update current displacement of robot
+            # update current module state of robot
             try:
                 (moduleState,) = selectModuleStateByRobotID(robotID=result[0]) # 현재 state 불러오기
 
@@ -94,8 +100,11 @@ class InControl(smach_ros.MonitorState):
                 rospy.logerr("[CtrlModule] Failed to update the robot's module state.")
 
             user_data.robot_list.remove(result[0])
-            rospy.loginfo(f"robot %s has completed control", result[0])
-            rospy.loginfo("[CtrlModule] robot_list is updated now (%s)", str(user_data.robot_list))
+            rospy.loginfo(f"[CtrlModule] Robot {result[0]} has completed control. Robot_list is updated now ({user_data.robot_list})")
+
+            # 로봇 상태 IDLE로 초기화
+            updateRobotStatus(robotID=result[0], status=IDLE)
+            rospy.logwarn(f"[CtrlModule] robot {result[0]}'s status updated to {IDLE}.")
         
         if len(user_data.robot_list) > 0:
             return True

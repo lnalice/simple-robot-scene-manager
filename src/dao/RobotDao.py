@@ -12,7 +12,7 @@ def updateRobotModuleState (robotID, moduleState) -> bool:
     cnx = connect_to_mysql(mysql_config, attempts=3)
     cur = cnx.cursor(buffered=True)
 
-    updatedStatusInfo = [str(moduleState), str(robotID)]
+    updatedStatusInfo = [moduleState, robotID]
     query = (
         "UPDATE Robot "
         "SET moduleState = %s "
@@ -35,10 +35,32 @@ def updateRobotVelocity (robotID, seconds, linX, angZ) -> bool:
     cnx = connect_to_mysql(mysql_config, attempts=3)
     cur = cnx.cursor(buffered=True)
 
-    updatedStatusInfo:list = [seconds, linX, angZ, str(robotID)]
+    updatedStatusInfo:list = [seconds, linX, angZ, robotID]
     query = (
         "UPDATE Robot "
         "SET seconds = %s, linX = %s, angZ = %s "
+        "WHERE id = %s"
+    )
+    cur.execute(query, updatedStatusInfo)
+
+    cnx.commit()
+    cnx.close()
+
+    return True
+
+"""
+UPDATE a robot's status 
+- IDLE / MOVE / MODULE / FAIL
+"""
+def updateRobotStatus (robotID, status) -> bool:
+
+    cnx = connect_to_mysql(mysql_config, attempts=3)
+    cur = cnx.cursor(buffered=True)
+
+    updatedStatusInfo:list = [status, robotID]
+    query = (
+        "UPDATE Robot "
+        "SET status = %s "
         "WHERE id = %s"
     )
     cur.execute(query, updatedStatusInfo)
