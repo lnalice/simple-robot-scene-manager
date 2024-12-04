@@ -1,4 +1,3 @@
-from collections import deque
 from dao.db.connection import connect_to_mysql
 from dao.db.config import mysql_config
 
@@ -13,7 +12,7 @@ def updateRobotModuleState (robotID, moduleState) -> bool:
     cnx = connect_to_mysql(mysql_config, attempts=3)
     cur = cnx.cursor(buffered=True)
 
-    updatedStatusInfo = [str(moduleState), str(robotID)]
+    updatedStatusInfo = [moduleState, robotID]
     query = (
         "UPDATE Robot "
         "SET moduleState = %s "
@@ -26,15 +25,42 @@ def updateRobotModuleState (robotID, moduleState) -> bool:
 
     return True
 
-def updateRobotDisplacement (robotID, displacementX, displacementZ) -> bool:
+"""
+UPDATE a robot's cmd_vel 
+[todo] navigation 위치값 x,y,r로 수정해야 함
+- seconds(이동 시간;초), linX(직진속도), angZ(각속도)
+"""
+def updateRobotVelocity (robotID, seconds, linX, angZ) -> bool:
 
     cnx = connect_to_mysql(mysql_config, attempts=3)
     cur = cnx.cursor(buffered=True)
 
-    updatedStatusInfo:list = [displacementX, displacementZ, str(robotID)]
+    updatedStatusInfo:list = [seconds, linX, angZ, robotID]
     query = (
         "UPDATE Robot "
-        "SET displacementX = %s, displacementZ = %s "
+        "SET seconds = %s, linX = %s, angZ = %s "
+        "WHERE id = %s"
+    )
+    cur.execute(query, updatedStatusInfo)
+
+    cnx.commit()
+    cnx.close()
+
+    return True
+
+"""
+UPDATE a robot's status 
+- IDLE / MOVE / MODULE / FAIL
+"""
+def updateRobotStatus (robotID, status) -> bool:
+
+    cnx = connect_to_mysql(mysql_config, attempts=3)
+    cur = cnx.cursor(buffered=True)
+
+    updatedStatusInfo:list = [status, robotID]
+    query = (
+        "UPDATE Robot "
+        "SET status = %s "
         "WHERE id = %s"
     )
     cur.execute(query, updatedStatusInfo)
@@ -47,29 +73,13 @@ def updateRobotDisplacement (robotID, displacementX, displacementZ) -> bool:
 """
 GET a robot's status
 """
-def moduleStateByRobotID(robotID: str) -> tuple:
+def selectModuleStateByRobotID(robotID: str) -> tuple:
 
     cnx = connect_to_mysql(mysql_config, attempts=3)
     cur = cnx.cursor(buffered=True)
 
     query =  (
         "SELECT moduleState FROM Robot "
-        "WHERE id = %s"
-    )
-    cur.execute(query, [robotID])
-
-    statusInfo:tuple = cur.fetchone()
-
-    cnx.close()
-
-    return statusInfo
-
-def displacementByRobotID(robotID: str) -> tuple:
-    cnx = connect_to_mysql(mysql_config, attempts=3)
-    cur = cnx.cursor(buffered=True)
-
-    query =  (
-        "SELECT displacementX, displacementZ FROM Robot "
         "WHERE id = %s"
     )
     cur.execute(query, [robotID])

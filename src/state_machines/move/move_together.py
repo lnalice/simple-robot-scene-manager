@@ -7,7 +7,9 @@ from std_msgs.msg import String
 from collections import deque
 
 from dao.moveDao import selectMoveDataByScene # mySQL
-from dao.RobotDao import updateRobotDisplacement, displacementByRobotID # mySQL
+from dao.RobotDao import updateRobotVelocity, updateRobotStatus # mySQL
+
+IDLE = "IDLE"
 
 class MoveRequest(smach.State):
     def __init__(self, direction:String):
@@ -50,10 +52,15 @@ class MoveRequest(smach.State):
             
             self.move_pub.publish(goal_data)
 
-            rospy.loginfo("[MoveTogether] move_req is published now.")
-            rospy.loginfo("[MoveTogether] data published now: %s", goal_data)
+            rospy.loginfo("[MoveTogether] move_req is published now: %s", goal_data)
 
-            user_data.robot_list.append(goal_data.split()[0])
+            robotID = goal_data.split()[0]
+
+            # 로봇 상태 업데이트 (이동 중)
+            updateRobotStatus(robotID=robotID, status=full_cmd_list[0])
+            rospy.logwarn(f"[MoveTogether] robot {robotID}'s status updated to {full_cmd_list[0]}.")
+
+            user_data.robot_list.append(robotID)
 
             if self.direction == "backward":
                 rospy.sleep(3)
@@ -72,16 +79,17 @@ class OnTheMove(smach_ros.MonitorState):
         result = str(res_msg.data).split()
 
         if result[0] in user_data.robot_list:
-            # update current displacement of robot
-            disX, disZ = displacementByRobotID(robotID=result[0])
-            newDisX = float(disX) + float(result[1]) * float(result[2])
-            newDisZ = float(disZ) + float(result[1]) * float(result[7])
 
-            updateRobotDisplacement(robotID=result[0], displacementX=newDisX, displacementZ=newDisZ)
+            # 새로운 cmd_vel 데이터로 업데이트
+            updateRobotVelocity(robotID=result[0], seconds=result[1], linX=result[2], angZ=result[3])
+            rospy.logwarn(f"[MoveTogether] Robot {result[0]}'s cmd_vel has now been updated to [{result[1]}, {result[2]}, {result[3]}].")
 
             user_data.robot_list.remove(result[0])
-            rospy.loginfo(f"robot %s arrived", result[0])
-            rospy.loginfo("[MoveTogether] robot_list is updated now (%s)", str(user_data.robot_list))
+            rospy.loginfo(f"[MoveTogether] Robot {result[0]} arrived. Robot_list is updated now ({user_data.robot_list})")
+
+            # 로봇 상태 IDLE로 초기화
+            updateRobotStatus(robotID=result[0], status=IDLE)
+            rospy.logwarn(f"[MoveTogether] robot {result[0]}'s status updated to {IDLE}.")
         
         if len(user_data.robot_list) > 0:
             return True
