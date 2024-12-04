@@ -1,46 +1,42 @@
-from collections import deque
 from dao.db.connection import connect_to_mysql
 from dao.db.config import mysql_config
 
-def selectModuleDataByScene (scene: str, isOpposite: bool, robot_list: list) -> deque:
+import rospy
+
+"""
+GET module's degree data by state
+- degree data: degZ, degX (확장 정도 별 실제 모터 각도 변위값)
+- state: 0, 0.25, 0.5, 0.75, 1 (확장 정도)
+"""
+def selectDegreeByState(state: float) -> tuple:
     cnx = connect_to_mysql(mysql_config, attempts=3)
-    result = cnx.cursor(buffered=True)
+    cur = cnx.cursor(buffered=True)
     
-    ctrl_flow = deque()
-
+    rospy.logwarn(state)
     query = (
-        "SELECT robotID, degZ, degX, delay FROM SceneModule "
-        "WHERE sceneID = %s"
+        "SELECT degZ, degX FROM Module "
+        "WHERE state = %s"
     )
-    result.execute(query, [scene])
+    cur.execute(query, [state])
 
-    for (robotID, degZ, degX, delay) in result:
-        task =""
-
-        if robotID not in robot_list:
-            continue
-
-        if degX == 0 and degZ == 0:
-            continue
-
-        if isOpposite:
-            task = "%s %f %f %d" %(robotID, -float(degZ), -float(degX), 0)
-        else:
-            task = "%s %f %f %d" %(robotID, degZ, degX, delay)
-        ctrl_flow.append(task)
+    degreeInfo:tuple = cur.fetchone()
 
     cnx.close()
+    
+    return degreeInfo # tuple(degZ, degX)
 
-    return ctrl_flow
+def selectStateByDegree(degZ: float, degX: float) -> tuple:
+    cnx = connect_to_mysql(mysql_config, attempts=3)
+    cur = cnx.cursor(buffered=True)
+    
+    query = (
+        "SELECT state FROM Module "
+        "WHERE degZ = %s"
+    )
+    cur.execute(query, [degZ])
 
+    degreeInfo:tuple = cur.fetchone()
 
-if __name__ == "__main__":
-    ctrl_flow:deque = selectModuleDataByScene("scene_1", False)
-
-    i:int = 0
-    while ctrl_flow:
-            
-            goal_data = ctrl_flow.popleft() 
-
-            print("goal_data [%d] %s" % (i, goal_data))
-            i += 1
+    cnx.close()
+    
+    return degreeInfo # tuple(state)

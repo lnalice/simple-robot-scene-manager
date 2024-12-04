@@ -6,10 +6,9 @@ from std_msgs.msg import String
 
 from collections import deque
 
-from dao.moduleDao import selectModuleDataByScene # mySQL
-from dao.RobotDao import updateRobotModuleState, moduleStateByRobotID # mySQL
-
-from helper.moduleCalculator import deg2moduleState
+from dao.sceneModuleDao import selectModuleDataByScene # mySQL
+from dao.RobotDao import updateRobotModuleState, selectModuleStateByRobotID # mySQL
+from dao.moduleDao import selectDegreeByState, selectStateByDegree # mySQL
 
 DISPLAY_TIME = 10.0
 
@@ -73,12 +72,26 @@ class InControl(smach_ros.MonitorState):
         rospy.loginfo("[CtrlModule] result %s", str(result))
 
         if result[0] in user_data.robot_list:
-            # update current displacement of robot
-            (moduleState,)= moduleStateByRobotID(robotID=result[0])
-            newState = moduleState + deg2moduleState(degZ=float(result[1]), degX=float(result[2]))
+            newState:float = 0
 
-            rospy.logwarn(newState)
-            updateRobotModuleState(robotID=result[0], moduleState=float(newState))
+            # update current displacement of robot
+            try:
+                (moduleState,) = selectModuleStateByRobotID(robotID=result[0]) # 현재 state 불러오기
+
+                cur_degZ, cur_degX = selectDegreeByState(state= moduleState) # 현재 state기준 degree 불러오기
+
+                # 목표 degree = 각도 변위값 + 현재 degree
+                goal_degZ = float(result[1]) + cur_degZ
+                goal_degX = float(result[2]) + cur_degX
+                
+                # 업데이트할 state = 목표 degre로 state불러오기
+                (newState,) = selectStateByDegree(degZ=goal_degZ, degX=goal_degX)
+                
+                # 새로운 state로 업데이트
+                updateRobotModuleState(robotID=result[0], moduleState=float(newState))
+                rospy.logwarn(f"[CtrlModule] Robot {result[0]}'s module state has now been updated to {newState}.")
+            except:
+                rospy.logerr("[CtrlModule] Failed to update the robot's module state.")
 
             user_data.robot_list.remove(result[0])
             rospy.loginfo(f"robot %s has completed control", result[0])

@@ -47,7 +47,7 @@ def updateRobotDisplacement (robotID, displacementX, displacementZ) -> bool:
 """
 GET a robot's status
 """
-def moduleStateByRobotID(robotID: str) -> tuple:
+def selectModuleStateByRobotID(robotID: str) -> tuple:
 
     cnx = connect_to_mysql(mysql_config, attempts=3)
     cur = cnx.cursor(buffered=True)
@@ -64,7 +64,7 @@ def moduleStateByRobotID(robotID: str) -> tuple:
 
     return statusInfo
 
-def displacementByRobotID(robotID: str) -> tuple:
+def selectDisplacementByRobotID(robotID: str) -> tuple:
     cnx = connect_to_mysql(mysql_config, attempts=3)
     cur = cnx.cursor(buffered=True)
 
