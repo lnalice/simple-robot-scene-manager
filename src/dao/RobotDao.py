@@ -1,4 +1,3 @@
-from collections import deque
 from dao.db.connection import connect_to_mysql
 from dao.db.config import mysql_config
 
@@ -26,15 +25,20 @@ def updateRobotModuleState (robotID, moduleState) -> bool:
 
     return True
 
-def updateRobotDisplacement (robotID, displacementX, displacementZ) -> bool:
+"""
+UPDATE a robot's cmd_vel 
+[todo] navigation 위치값 x,y,r로 수정해야 함
+- seconds(이동 시간;초), linX(직진속도), angZ(각속도)
+"""
+def updateRobotVelocity (robotID, seconds, linX, angZ) -> bool:
 
     cnx = connect_to_mysql(mysql_config, attempts=3)
     cur = cnx.cursor(buffered=True)
 
-    updatedStatusInfo:list = [displacementX, displacementZ, str(robotID)]
+    updatedStatusInfo:list = [seconds, linX, angZ, str(robotID)]
     query = (
         "UPDATE Robot "
-        "SET displacementX = %s, displacementZ = %s "
+        "SET seconds = %s, linX = %s, angZ = %s "
         "WHERE id = %s"
     )
     cur.execute(query, updatedStatusInfo)
@@ -54,22 +58,6 @@ def selectModuleStateByRobotID(robotID: str) -> tuple:
 
     query =  (
         "SELECT moduleState FROM Robot "
-        "WHERE id = %s"
-    )
-    cur.execute(query, [robotID])
-
-    statusInfo:tuple = cur.fetchone()
-
-    cnx.close()
-
-    return statusInfo
-
-def selectDisplacementByRobotID(robotID: str) -> tuple:
-    cnx = connect_to_mysql(mysql_config, attempts=3)
-    cur = cnx.cursor(buffered=True)
-
-    query =  (
-        "SELECT displacementX, displacementZ FROM Robot "
         "WHERE id = %s"
     )
     cur.execute(query, [robotID])

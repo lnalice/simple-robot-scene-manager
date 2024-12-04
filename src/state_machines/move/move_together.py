@@ -7,7 +7,7 @@ from std_msgs.msg import String
 from collections import deque
 
 from dao.moveDao import selectMoveDataByScene # mySQL
-from dao.RobotDao import updateRobotDisplacement, displacementByRobotID # mySQL
+from dao.RobotDao import updateRobotVelocity, selectDisplacementByRobotID # mySQL
 
 class MoveRequest(smach.State):
     def __init__(self, direction:String):
@@ -72,12 +72,9 @@ class OnTheMove(smach_ros.MonitorState):
         result = str(res_msg.data).split()
 
         if result[0] in user_data.robot_list:
-            # update current displacement of robot
-            disX, disZ = displacementByRobotID(robotID=result[0])
-            newDisX = float(disX) + float(result[1]) * float(result[2])
-            newDisZ = float(disZ) + float(result[1]) * float(result[7])
 
-            updateRobotDisplacement(robotID=result[0], displacementX=newDisX, displacementZ=newDisZ)
+            updateRobotVelocity(robotID=result[0], seconds=result[1], linX=result[2], angZ=result[3])
+            rospy.logwarn(f"[MoveTogether] Robot {result[0]}'s cmd_vel has now been updated to [{result[1]}, {result[2]}, {result[3]}].")
 
             user_data.robot_list.remove(result[0])
             rospy.loginfo(f"robot %s arrived", result[0])
