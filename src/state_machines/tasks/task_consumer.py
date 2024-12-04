@@ -8,8 +8,7 @@ from state_machines.tasks.config.actionList import baseAction
 class Task2State(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes=list(baseAction) + ['unknown', 'none'],
-                             input_keys=['sync_queue', 'scene', 'robot_list', 'command'],
-                             output_keys=['sync_queue', 'scene', 'robot_list', 'command'])
+                             io_keys=['sync_queue', 'scene', 'robot_list', 'command'])
         
     def execute(self, user_data):
         try:
@@ -35,9 +34,8 @@ class TaskConsumerSM(smach.StateMachine):
     def __init__(self):
         smach.StateMachine.__init__(self, 
                                     outcomes=list(baseAction) + ['unknown', 'none'],
-                                    input_keys=['sync_queue'],
-                                    output_keys=['sync_queue'])
-
+                                    input_keys=['sync_queue', 'scene', 'robot_list', 'command'],
+                                    output_keys=['sync_queue', 'scene', 'robot_list', 'command'])
         with self:
             smach.StateMachine.add('READ_TASK', Task2State(),
                                    transitions={'none': 'READ_TASK',
