@@ -3,7 +3,7 @@ import smach.state
 
 import queue
 
-from state_machines.tasks.task_producer import TaskProducerSM
+from tasks.task_producer import TaskProducerSM
 
 
 class TaskAssignmentSM(smach.StateMachine):

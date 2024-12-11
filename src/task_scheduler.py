@@ -1,6 +1,6 @@
 import smach
 
-from state_machines.tasks.task_consumer import TaskConsumerSM
+from tasks.task_consumer import TaskConsumerSM
 
 class TaskSchedulerSM(smach.StateMachine):
     def __init__(self):

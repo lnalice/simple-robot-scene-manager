@@ -3,7 +3,7 @@ import smach
 
 import queue
 
-from state_machines.tasks.config.actionList import baseAction
+from config.actionList import baseAction
 
 class Task2State(smach.State):
     def __init__(self):
