@@ -1,8 +1,6 @@
 import smach
 
-from state_machines.move.move_together import MoveTogetherSM
-from state_machines.control.control_module import CtrlModuleSM
-from state_machines.tasks.task_consumer import TaskConsumerSM
+from tasks.task_consumer import TaskConsumerSM
 
 class TaskSchedulerSM(smach.StateMachine):
     def __init__(self):
@@ -10,26 +8,21 @@ class TaskSchedulerSM(smach.StateMachine):
                                      input_keys=['sync_queue'],
                                      output_keys=['sync_queue'])
         
+        self.concurrence = smach.Concurrence(
+            outcomes=['exit', 'done'],
+            default_outcome='exit',
+            child_termination_cb=lambda outcome_map: False,
+            outcome_cb=lambda outcome_map: 'exit',
+            input_keys=[], output_keys=[]
+        )
+
         self.set_initial_state(['CONSUME'])
         self.userdata.command = ''
         self.userdata.scene = ''
         self.userdata.robot_list = []
 
-        with self:
-            smach.StateMachine.add('CONSUME', TaskConsumerSM(),
-                                   transitions={'MOVE': 'MOVE',
-                                                'MODULE': 'CTRL_MODULE',
-                                                'HOME': 'HOME',
-                                                'MIN': 'MINIMIZE_MODULE'})
-
-            smach.StateMachine.add('MOVE', MoveTogetherSM(direction="forward"),
-                                   transitions={'arrive': 'CONSUME'})
-            smach.StateMachine.add('CTRL_MODULE', CtrlModuleSM(direction="forward"),
-                                   transitions={'complete': 'CONSUME'})
-            smach.StateMachine.add('HOME', MoveTogetherSM(direction="backward"),
-                                   transitions={'arrive': 'CONSUME'})
-            smach.StateMachine.add('MINIMIZE_MODULE', CtrlModuleSM(direction="backward"),
-                                   transitions={'complete': 'CONSUME'})
+        with self.concurrence:
+            smach.Concurrence.add('CONSUME', TaskConsumerSM())
     
     def execute(self, parent_ud=...):
         return super().execute(parent_ud)
