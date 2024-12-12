@@ -1,6 +1,8 @@
 import smach
 
-from tasks.task_consumer import TaskConsumerSM
+from tasks.task_consumer import TaskConsumer
+from tasks.robot_monitor import RobotMonitor
+from tasks.task_director import TaskDirector
 
 class TaskSchedulerSM(smach.StateMachine):
     def __init__(self):
@@ -10,19 +12,18 @@ class TaskSchedulerSM(smach.StateMachine):
         
         self.concurrence = smach.Concurrence(
             outcomes=['exit', 'done'],
-            default_outcome='exit',
-            child_termination_cb=lambda outcome_map: False,
-            outcome_cb=lambda outcome_map: 'exit',
-            input_keys=[], output_keys=[]
+            default_outcome='done',
+            outcome_cb=None,
         )
 
         self.set_initial_state(['CONSUME'])
-        self.userdata.command = ''
-        self.userdata.scene = ''
-        self.userdata.robot_list = []
+        self.userdata.robot_queues = {} # 로봇 별 큐를 저장
+        self.userdata.idle_robots = set() # 이용가능한 로봇 저장
 
         with self.concurrence:
-            smach.Concurrence.add('CONSUME', TaskConsumerSM())
+            smach.Concurrence.add('CONSUME', TaskConsumer())
+            smach.Concurrence.add('MONITOR', RobotMonitor())
+            smach.Concurrence.add('DIRECTOR', TaskDirector())
     
     def execute(self, parent_ud=...):
         return super().execute(parent_ud)
