@@ -3,30 +3,31 @@ import smach.state
 
 import queue
 
-from tasks.task_producer import TaskProducerSM
+from tasks.task_allocation import TaskAllocationSM
+from state_machines.context_monitor import ContextMonitorSM
 
 
 class TaskAssignmentSM(smach.StateMachine):
     def __init__(self):
-        smach.StateMachine.__init__(self, outcomes=['exit', 'done'],
+        smach.StateMachine.__init__(self, outcomes=['exit', 'fail'],
                                      input_keys=['sync_queue'],
                                      output_keys=['sync_queue'])
-        self.set_initial_state(['PRODUCE'])
+        # self.set_initial_state(['PRODUCE'])
+
+        self.userdata.context_queue = queue.Queue()
+
+        concurrence = smach.Concurrence(
+            outcomes=['exit', 'fail'],
+            default_outcome='exit',
+            input_keys=['context_queue', 'sync_queue'],
+            output_keys=['context_queue', 'sync_queue']
+        )
 
         with self:
-            """
-            [to-do] 'role assignment' -> 'task allocation' draft
-            """
-            # self.add('ROLE_SETTING', RoleSettingSM(),
-            #          transitions={'invalid': 'TASK_ALLOCATION',
-            #                       'valid': 'ROLE_SETTING',
-            #                       'preempted':'ROLE_SETTING'})
-            # self.add('TASK_ALLOCATION', TaskAllocationSM(),
-            #          transitions={
-            #              'busy': 'TASK_ALLOCATION',
-            #              'done': 'PRODUCE'})
-
-            smach.StateMachine.add('PRODUCE', TaskProducerSM())
+            self.add('TASK_ASSIGNMENT_CC', concurrence)
+            with concurrence:
+                smach.Concurrence.add('CONTEXT_MONITOR', ContextMonitorSM())
+                smach.Concurrence.add('TASK_ALLOCATION', TaskAllocationSM())
 
     def execute(self, parent_ud=...):
         return super().execute(parent_ud)
