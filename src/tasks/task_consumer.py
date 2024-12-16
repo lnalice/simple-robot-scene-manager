@@ -11,7 +11,7 @@ class ReadTask(smach.State):
     def enqueue(self, robot: str, cmd: str, queues: dict):
         if robot not in queues:
             queues[robot] = queue.Queue() # 새로운 큐 생성
-            rospy.logwarn(f"Created new queue for a robot {robot}.")
+            rospy.logwarn(f"[TaskConsumer] Created new queue for a robot {robot}.")
 
         queues[robot].put(cmd) # insert an data (ex. MOVE tb3_0 seconds linX angZ delay)
     
@@ -21,10 +21,11 @@ class ReadTask(smach.State):
             
             robot_list = set()
             task = user_data.sync_queue.get(timeout=10)
-            user_data.command = task
-            
-            rospy.loginfo(f"[TaskConsumer] These robots will be tracked for a task: %s.", user_data.command)
-            self.enqueue("tb3_0", user_data.command, user_data.robot_queues)
+
+            for command in task:
+                rospy.loginfo(f"[TaskConsumer] These robots will be tracked for a task: %s.", command)
+                robot = command.split()[1]
+                self.enqueue(robot, command, user_data.robot_queues)
             
             return 'done'
 

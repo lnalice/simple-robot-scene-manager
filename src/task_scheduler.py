@@ -12,7 +12,7 @@ class TaskSchedulerSM(smach.StateMachine):
 
         # self.set_initial_state(['CONSUME'])
         self.userdata.robot_queues = {} # 로봇 별 큐를 저장
-        self.userdata.idle_robots = set(['tb3_0']) # 이용가능한 로봇 저장
+        self.userdata.idle_robots = set(['tb3_0', 'tb3_1', 'tb3_2', 'tb3_3']) # 이용가능한 로봇 저장
 
         concurrence = smach.Concurrence(
             outcomes=['exit', 'fail'],
