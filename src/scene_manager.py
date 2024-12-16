@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import signal
+import sys
 
 import rospy
 import smach
@@ -11,9 +12,8 @@ from task_assignment import TaskAssignmentSM
 from task_scheduler import TaskSchedulerSM
 
 def signal_handler(signum, frame):
-    res = input("\n[Scene Manager] Ctrl-c was pressed. Do you want to exit? (y/n) ")
-    if res =='y':
-        exit(1)
+    rospy.signal_shutdown('Shutting down on Ctrl+C')
+    sys.exit(1)
 
 signal.signal(signal.SIGINT, signal_handler)
 
@@ -25,8 +25,6 @@ class SceneManager:
         self.concurrence = smach.Concurrence(
             outcomes=['exit', 'done'],
             default_outcome='exit',
-            child_termination_cb=lambda outcome_map: False,
-            outcome_cb=lambda outcome_map: 'exit',
             input_keys=[], output_keys=[]
         )
 
@@ -38,8 +36,10 @@ class SceneManager:
 
 if __name__ == "__main__":
     scene_manager = SceneManager()
+    try:
+        outcome = scene_manager.concurrence.execute()
+        rospy.loginfo("[Scene Manager] final state is %s. done.", outcome)
+        rospy.spin()
 
-    outcome = scene_manager.concurrence.execute()
-    rospy.loginfo("[Scene Manager] final state is %s. done.", outcome)
-    
-    rospy.spin()
+    except Exception as e:
+        sys.exit(1)
