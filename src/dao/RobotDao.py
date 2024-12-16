@@ -89,3 +89,25 @@ def selectModuleStateByRobotID(robotID: str) -> tuple:
     cnx.close()
 
     return statusInfo
+
+"""
+GET a robot's IDs by role
+"""
+def selectRobotIDsByRole(role: str) -> tuple:
+
+    cnx = connect_to_mysql(mysql_config, attempts=3)
+    cur = cnx.cursor(buffered=True)
+
+    query =  (
+        "SELECT id FROM Robot "
+        "WHERE role = %s"
+    )
+    cur.execute(query, [role])
+
+    result = cur.fetchall()
+
+    cnx.close()
+
+    statusInfo: tuple = tuple(id[0] for id in result) # ex. ("id1", "id2")
+
+    return statusInfo
