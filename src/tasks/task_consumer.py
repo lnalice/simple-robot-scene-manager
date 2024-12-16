@@ -3,40 +3,46 @@ import smach
 
 import queue
 
-from config.actionList import baseAction
-
-class Task2State(smach.State):
+class ReadTask(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=list(baseAction) + ['unknown', 'none'],
-                             io_keys=['sync_queue', 'scene', 'robot_list', 'command'])
-        
+        smach.State.__init__(self, outcomes=["done", "none", "fail"],
+                             io_keys=["sync_queue", "robot_queues", "command"])
+    
+    def enqueue(self, robot: str, cmd: str, queues: dict):
+        if robot not in queues:
+            queues[robot] = queue.Queue() # 새로운 큐 생성
+            rospy.logwarn(f"Created new queue for a robot {robot}.")
+
+        queues[robot].put(cmd) # insert an data (ex. MOVE tb3_0 seconds linX angZ delay)
+    
     def execute(self, user_data):
         try:
-            user_data.command = user_data.sync_queue.get()
-            task_list = user_data.command.split()
-
-            action = task_list[0] # MOVE or HOME or MODULE or SCENE
-            user_data.scene = task_list[1] # ex) friend, module_50
-        
-            user_data.robot_list = task_list[2:]
-
-            rospy.loginfo(f"[TaskConsumer] SceneManager will track these robots: %s.", (user_data.robot_list))
-            rospy.loginfo(f"[TaskConsumer] I saved state \'%s\' in SceneManager", action)
+            rospy.sleep(1)
             
-            return action if action in baseAction else 'unknown'
+            robot_list = set()
+            task = user_data.sync_queue.get(timeout=10)
+            user_data.command = task
+            
+            rospy.loginfo(f"[TaskConsumer] These robots will be tracked for a task: %s.", user_data.command)
+            self.enqueue("tb3_0", user_data.command, user_data.robot_queues)
+            
+            return 'done'
 
         except queue.Empty:
             rospy.loginfo(f"[TaskConsumer] Queue is empty, still waiting...")
             return 'none'
-        
+
 
 class TaskConsumerSM(smach.StateMachine):
     def __init__(self):
-        smach.StateMachine.__init__(self, 
-                                    outcomes=list(baseAction) + ['unknown', 'none'],
-                                    input_keys=['sync_queue', 'scene', 'robot_list', 'command'],
-                                    output_keys=['sync_queue', 'scene', 'robot_list', 'command'])
+        smach.StateMachine.__init__(self, outcomes=['fail'],
+                             input_keys=['sync_queue', 'robot_queues'],
+                             output_keys=['sync_queue', 'robot_queues'])
+        
+        self.userdata.command = ""
+
         with self:
-            smach.StateMachine.add('READ_TASK', Task2State(),
-                                   transitions={'none': 'READ_TASK',
-                                                'unknown': 'READ_TASK'})
+            smach.StateMachine.add('READ_TASK', ReadTask(),
+                                   transitions={'done':'READ_TASK',
+                                                'none': 'READ_TASK',
+                                                'fail': 'fail'})
