@@ -1,28 +1,29 @@
 import smach
 
 from tasks.task_consumer import TaskConsumerSM
+from tasks.robot_monitor import RobotMonitorSM
+from tasks.task_director import TaskDirectorSM
 
 class TaskSchedulerSM(smach.StateMachine):
     def __init__(self):
-        smach.StateMachine.__init__(self, outcomes=['unknown', 'none', 'end'],
+        smach.StateMachine.__init__(self, outcomes=['exit','fail'],
                                      input_keys=['sync_queue'],
                                      output_keys=['sync_queue'])
-        
-        self.concurrence = smach.Concurrence(
-            outcomes=['exit', 'done'],
+
+        # self.set_initial_state(['CONSUME'])
+        self.userdata.robot_queues = {} # 로봇 별 큐를 저장
+        self.userdata.idle_robots = set(['tb3_0']) # 이용가능한 로봇 저장
+
+        concurrence = smach.Concurrence(
+            outcomes=['exit', 'fail'],
             default_outcome='exit',
-            child_termination_cb=lambda outcome_map: False,
-            outcome_cb=lambda outcome_map: 'exit',
-            input_keys=[], output_keys=[]
+            input_keys=['sync_queue', 'robot_queues', 'idle_robots'],
+            output_keys=['sync_queue', 'robot_queues', 'idle_robots']
         )
+        with self:
+            self.add('TASK_SCHEDULER_CC', concurrence)
 
-        self.set_initial_state(['CONSUME'])
-        self.userdata.command = ''
-        self.userdata.scene = ''
-        self.userdata.robot_list = []
-
-        with self.concurrence:
-            smach.Concurrence.add('CONSUME', TaskConsumerSM())
-    
-    def execute(self, parent_ud=...):
-        return super().execute(parent_ud)
+            with concurrence:
+                smach.Concurrence.add('TASK_CONSUMER', TaskConsumerSM())
+                smach.Concurrence.add('ROBOT_MONITOR', RobotMonitorSM())
+                smach.Concurrence.add('TASK_DIRECTOR', TaskDirectorSM())
