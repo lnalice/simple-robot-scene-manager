@@ -29,8 +29,17 @@ Context Queue로부터 context와 필요한 모듈 정보를 가져와 필요한
 - **Operating System**: Ubuntu 20.04.6 LTS
 - **Kernel**: Linux 5.4.0-200-generic
 - **ROS version**: noetic
+- **PC setup for TurtleBot3** 완료 ([Robotis Emanual 참고](https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/))
 
-## 2. Environment Variable
+## 2. Install packages
+실행을 위해 필요한 패키지를 설치합니다.
+```bash
+sudo apt update
+
+sudo apt install python3-pip mysql-server ros-noetic-smach ros-noetic-smach-ros
+pip3 install mysql-connector-python python-dotenv
+```
+## 3. Environment Variable
 dotenv를 사용해 환경변수 저장 (데이터베이스에 접근 시 필요)
 - **src/ 폴더 아래에 .env 파일을 추가해주세요**
 - 아래의 내용이 .env에 포함되어야 하고, 각 변수값은 수정해야 합니다.
@@ -41,14 +50,14 @@ DB_PASSWORD={granted_password}
 DATABASE={schema_name}
 ```
 
-## 3. ~/.bashrc
+## 4. ~/.bashrc
 ```bash
 export ROS_MASTER_URI=http://{server-ip}:11311
 export ROS_HOSTNAME={server-ip}
 export TURTLEBOT3_MODEL=waffle
 ```
 
-## 4. roscore
+## 5. roscore
 ```bash
 roscore
 ```
