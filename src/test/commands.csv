@@ -1,12 +1,19 @@
 action,scene,robots,description
 move,video_7-1,tb3_1,책상 이동
+module,module_100,tb3_1,책상 (최대 확장)
+min,video_7-1,tb3_1,책상 → 카트 (절반 축소)
+home,video_7-1,tb3_1,카트 홈위치 (열린 채로)
+min,video_7-2,tb3_1,카트 축소 (최대 축소)
+move,video_7-1,tb3_1 tb3_2,테이블+의자 이동
+move,video_7-1,tb3_0,친구의자 이동
 module,module_100,tb3_1,책상 확장 (최대 확장)
 min,module_100,tb3_1,책상 축소
-module,module_50,tb3_1,책상 확장 (카트)
-min,module_50,tb3_1,책상 축소 (카트)
-move,video_7-1,tb3_2,의자 이동
-move,video_7-1,tb3_0,의자 이동
-module,module_100,tb3_1,책상 확장 (최대 확장)
-min,module_100,tb3_1,책상 축소
-move,video_7-2,tb3_0 tb3_1 tb3_2 tb3_3,친구 → 각자 공부
-home,video_7-2,tb3_0 tb3_1 tb3_2 tb3_3,각자 공부 → 홈위치
+home,video_7-1,tb3_0 tb3_1 tb3_2, 의자+테이블+의자 구조 복귀
+move,video_7-2,tb3_0 tb3_1 tb3_2 tb3_3,[제외]친구 → 각자 공부
+move,video_7-3,tb3_0 tb3_1 tb3_2 tb3_3,[제외]각자 공부 → 홈위치
+module,module_100,tb3_0,[OPTION] 의자 확장 (최대 확장)
+module,module_100,tb3_2,[OPTION] 의자 확장 (최대 확장)
+module,module_100,tb3_3,[OPTION] 책상 확장 (최대 확장)
+min,module_100,tb3_0,[OPTION] 의자 축소 (최대 축소)
+min,module_100,tb3_2,[OPTION] 의자 축소 (최대 축소)
+min,module_100,tb3_3,[OPTION] 책상 축소 (최대 축소)
